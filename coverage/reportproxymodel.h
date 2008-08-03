@@ -17,57 +17,31 @@
  * 02110-1301, USA.
  */
 
+#ifndef VERITAS_COVERAGE_REPORTPROXYMODEL_H
+#define VERITAS_COVERAGE_REPORTPROXYMODEL_H
 
-
-#ifndef VERITAS_COVERAGE_COVOUTPUTJOB_H
-#define VERITAS_COVERAGE_COVOUTPUTJOB_H
-
-
-#include <QProcess>
-#include <QString>
-#include <KUrl>
-
-#include <outputview/outputjob.h>
-
-namespace KDevelop
-{
-class IOutputView;
-class IProject;
-class ProcessLineMaker;
-}
-
-class KProcess;
+#include <QSortFilterProxyModel>
 
 namespace Veritas
 {
 
-class CovOutputModel;
-class CovOutputDelegate;
-class CovView;
-
-class CovOutputJob : public KDevelop::OutputJob
+class ReportProxyModel : public QSortFilterProxyModel
 {
-    Q_OBJECT
-
+Q_OBJECT
 public:
-    CovOutputJob(CovOutputDelegate *parent, const KUrl& root);
-    virtual void start();
+    ReportProxyModel(QObject* parent);
+    virtual ~ReportProxyModel();
+
+    void setFileViewState();
+    void setDirViewState();
 
 protected:
-    CovOutputModel* model() const;
-
-private Q_SLOTS:
-    void slotFinished();
-    void slotError(QProcess::ProcessError error);
+    bool filterAcceptsColumn(int, const QModelIndex&) const;
 
 private:
-    CovOutputDelegate* delegate() const;
-    KDevelop::ProcessLineMaker* m_lineMaker;
-    KProcess* m_lcov;
-    KUrl m_root;
-    QString m_tmpPath;
+    enum State { DirView, FileView } m_state;
 };
 
 }
 
-#endif // VERITAS_COVERAGE_COVOUTPUTJOB_H
+#endif

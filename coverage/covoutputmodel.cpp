@@ -44,6 +44,19 @@ CovOutputModel::CovOutputModel(QObject *parent)
 CovOutputModel::~CovOutputModel()
 {}
 
+QModelIndex CovOutputModel::nextHighlightIndex(const QModelIndex& currentIndex)
+{
+    Q_UNUSED(currentIndex);
+    return QModelIndex();
+}
+
+QModelIndex CovOutputModel::previousHighlightIndex(const QModelIndex& currentIndex)
+{
+    Q_UNUSED(currentIndex);
+    return QModelIndex();
+}
+
+
 QVariant CovOutputModel::data(const QModelIndex& index, int role) const
 {
     if (role != Qt::FontRole) {
@@ -60,47 +73,10 @@ void CovOutputModel::activate(const QModelIndex &idx)
     if (!covoutputitem) return;
 }
 
-QModelIndex CovOutputModel::nextHighlightIndex(const QModelIndex& currentIndex)
-{
-    int nextRow = currentIndex.row() + 1;
-    int rows = rowCount(currentIndex.parent());
-    while (nextRow != currentIndex.row()) {
-        QModelIndex idx = index(nextRow, currentIndex.column(), currentIndex.parent());
-        if (CovOutputItem* item = dynamic_cast<CovOutputItem*>(itemFromIndex(idx))) {
-            return idx;
-        }
-        ++nextRow;
-        if (nextRow >= rows) {
-            if (currentIndex.row() == -1) {
-                break;
-            } else {
-                nextRow = 0;
-            }
-        }
-    }
-    return QModelIndex();
-}
-
-QModelIndex CovOutputModel::previousHighlightIndex(const QModelIndex& currentIndex)
-{
-    int prevRow = currentIndex.row() - 1;
-    int rows = rowCount(currentIndex.parent());
-    do {
-        if (prevRow < 0) {
-            prevRow = rows - 1;
-        }
-        QModelIndex idx = index(prevRow, currentIndex.column(), currentIndex.parent());
-        if (CovOutputItem* item = dynamic_cast<CovOutputItem*>(itemFromIndex(idx))) {
-            return idx;
-        }
-        --prevRow;
-    } while (prevRow != currentIndex.row());
-    return QModelIndex();
-}
-
 void CovOutputModel::appendOutputs(const QStringList &lines)
 {
     foreach(QString line, lines) {
+        return;
         appendRow(new QStandardItem(line));
     }
 }

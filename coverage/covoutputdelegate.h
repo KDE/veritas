@@ -24,17 +24,19 @@
 
 #include <QtGui/QItemDelegate>
 #include <kcolorscheme.h>
+#include "coverageexport.h"
 
 namespace Veritas
 {
 
-class CovOutputDelegate : public QItemDelegate
+class VERITAS_COVERAGE_EXPORT CovOutputDelegate : public QItemDelegate
 {
 public:
-    CovOutputDelegate(QObject*);
+    CovOutputDelegate(QObject* parent = 0);
     void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
 private:
     KStatefulBrush textBrush;
+    KStatefulBrush processBrush;
 };
 
 }

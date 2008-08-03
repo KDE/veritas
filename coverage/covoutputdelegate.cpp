@@ -20,16 +20,17 @@
  ***************************************************************************/
 
 #include "covoutputdelegate.h"
+#include "covoutputmodel.h"
 #include <QtGui/QPainter>
 #include <QtCore/QModelIndex>
 #include <KDebug>
-#include "covoutputmodel.h"
 
 using Veritas::CovOutputDelegate;
 
 CovOutputDelegate::CovOutputDelegate(QObject* parent)
       : QItemDelegate(parent),
-        textBrush(KColorScheme::View, KColorScheme::NormalText)
+        textBrush(KColorScheme::View, KColorScheme::NormalText),
+        processBrush(KColorScheme::View, KColorScheme::PositiveText)
 {}
 
 void CovOutputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
@@ -37,6 +38,10 @@ void CovOutputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 {
     QStyleOptionViewItem opt = option;
     opt.palette.setBrush(QPalette::Text, textBrush.brush(option.palette));
+    QString text = index.data().toString();
+    if (text.startsWith("Processing")) {
+        opt.palette.setBrush(QPalette::Text, processBrush.brush(option.palette));
+    }
     QItemDelegate::paint(painter, opt, index);
 }
 
