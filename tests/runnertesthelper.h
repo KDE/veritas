@@ -21,8 +21,8 @@
 #define VERITAS_RUNNERTESTHELPER_H
 
 #include <QStringList>
-#include <veritas/testresult.h>
-#include <veritas/veritasexport.h>
+#include "../testresult.h"
+#include "../veritasexport.h"
 
 namespace Veritas
 {

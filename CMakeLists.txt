@@ -1,7 +1,22 @@
+project(veritas)
+
+set(KDE_MIN_VERSION "4.3.0")
+find_package(KDE4 4.3.0 REQUIRED)
+#find_package(BerkeleyDB)
+#find_package(TDB)
+include (KDE4Defaults)
+include (MacroLibrary)
+
+find_package(KDevPlatform 0.9.95 REQUIRED)
+
 add_subdirectory(tests)
 
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=9003 )
+
+add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+
+include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEVPLATFORM_INCLUDE_DIR} ${KDE4_INCLUDES})
 
 ########### next target ###############
 
@@ -44,9 +59,9 @@ qt4_add_resources(veritas_SRCS
 kde4_add_library(kdevplatformveritas SHARED ${veritas_SRCS})
 set_target_properties(kdevplatformveritas PROPERTIES VERSION ${KDEVPLATFORM_LIB_VERSION} SOVERSION ${KDEVPLATFORM_LIB_SOVERSION})
 target_link_libraries(kdevplatformveritas
-    kdevplatforminterfaces
-    kdevplatformtests
-    sublime
+    ${KDEVPLATFORM_INTERFACES_LIBRARY}
+    ${KDEVPLATFORM_TESTS_LIBRARY}
+    ${KDEVPLATFORM_SUBLIME_LIBRARY}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTTEST_LIBRARY}
@@ -59,7 +74,7 @@ target_link_libraries(kdevplatformveritas LINK_INTERFACE_LIBRARIES
         ${KDE4_KDEUI_LIBS} 
         ${QT_QTTEST_LIBRARY})
 qt4_automoc(${veritas_SRCS})
-install(TARGETS kdevplatformveritas EXPORT KDevPlatformTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kdevplatformveritas ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 

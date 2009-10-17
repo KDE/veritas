@@ -20,7 +20,7 @@
 
 #include "overlaymanager.h"
 
-#include "veritas/test.h"
+#include "../test.h"
 #include "utils.h"
 
 #include "runnermodel.h"

@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include "veritas/test.h"
+#include "test.h"
 #include "internal/test_p.h"
 #include <KDebug>
 

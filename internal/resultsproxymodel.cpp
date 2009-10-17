@@ -21,8 +21,8 @@
 
 #include "resultsproxymodel.h"
 #include "resultsmodel.h"
-#include "veritas/testresult.h"
-#include "veritas/test.h"
+#include "../testresult.h"
+#include "../test.h"
 
 using Veritas::Test;
 using Veritas::ResultsModel;

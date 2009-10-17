@@ -22,7 +22,7 @@
 #define VERITAS_OVERLAYMANAGER_H
 
 #include <QObject>
-#include "veritas/veritasexport.h"
+#include "../veritasexport.h"
 
 class QAbstractItemView;
 class QModelIndex;

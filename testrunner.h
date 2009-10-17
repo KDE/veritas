@@ -21,7 +21,7 @@
 #ifndef VERITAS_ITESTRUNNER_H
 #define VERITAS_ITESTRUNNER_H
 
-#include "../interfaces/iplugin.h"
+#include <interfaces/iplugin.h>
 #include "veritasexport.h"
 
 class QWidget;

@@ -22,7 +22,7 @@
 #ifndef VERITAS_RESULTSPROXYMODEL_H
 #define VERITAS_RESULTSPROXYMODEL_H
 
-#include "veritas/testresult.h"
+#include "../testresult.h"
 #include "../veritasexport.h"
 
 #include <QList>
