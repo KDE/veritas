@@ -59,9 +59,9 @@ qt4_add_resources(veritas_SRCS
 kde4_add_library(kdevplatformveritas SHARED ${veritas_SRCS})
 set_target_properties(kdevplatformveritas PROPERTIES VERSION ${KDEVPLATFORM_LIB_VERSION} SOVERSION ${KDEVPLATFORM_LIB_SOVERSION})
 target_link_libraries(kdevplatformveritas
-    ${KDEVPLATFORM_INTERFACES_LIBRARY}
-    ${KDEVPLATFORM_TESTS_LIBRARY}
-    ${KDEVPLATFORM_SUBLIME_LIBRARY}
+    ${KDEVPLATFORM_INTERFACES_LIBRARIES}
+    ${KDEVPLATFORM_TESTS_LIBRARIES}
+    ${KDEVPLATFORM_SUBLIME_LIBRARIES}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTTEST_LIBRARY}
@@ -88,5 +88,7 @@ install(FILES
     testtoolviewfactory.h
     testexecutableinfo.h
     ctestfileparser.h
-    tests/runnertesthelper.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/kdevplatform/veritas COMPONENT Devel )
+install(FILES
+    tests/runnertesthelper.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/kdevplatform/veritas/tests COMPONENT Devel )
