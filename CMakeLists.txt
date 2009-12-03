@@ -9,14 +9,14 @@ include (MacroLibrary)
 
 find_package(KDevPlatform 0.9.95 REQUIRED)
 
+include_directories(${KDEVPLATFORM_INCLUDE_DIR} ${KDE4_INCLUDES})
+
 add_subdirectory(tests)
 
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=9003 )
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-
-include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEVPLATFORM_INCLUDE_DIR} ${KDE4_INCLUDES})
 
 ########### next target ###############
 
