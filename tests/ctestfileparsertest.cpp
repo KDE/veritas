@@ -25,7 +25,7 @@
 #include <KDebug>
 #include "../ctestfileparser.h"
 
-#include <veritas/testexecutableinfo.h>
+#include "../testexecutableinfo.h"
 
 using Veritas::TestExecutableInfo;
 using Veritas::FilesystemAccess;
