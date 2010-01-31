@@ -1,6 +1,7 @@
 /*
  * This file is part of KDevelop
  * Copyright 2008 Manuel Breugelmans <mbr.nxi@gmail.com>
+ * Copyright 2010 Daniel Calviño Sánchez <danxuliu@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -102,7 +103,8 @@ public:
 
 };
 
-TestRunner::TestRunner(ITestFramework* framework, ITestTreeBuilder* builder)
+TestRunner::TestRunner(ITestFramework* framework, ITestTreeBuilder* builder,
+                       ProjectSelection::IProjectFilter* projectFilter /* = 0*/)
     : QObject(0), d(new TestRunner::Private)
 {
     d->self = this;
@@ -117,7 +119,7 @@ TestRunner::TestRunner(ITestFramework* framework, ITestTreeBuilder* builder)
     resultHeaders << i18n("Test") << i18n("Message")
                   << i18n("File") << i18n("Line");
     d->resultsModel = new ResultsModel(resultHeaders, this);
-    d->window = new RunnerWindow(d->resultsModel);
+    d->window = new RunnerWindow(d->resultsModel, projectFilter);
 
     connect(d->treeBuilder, SIGNAL(reloadFinished(Veritas::Test*)),
             this, SLOT(setupToolView(Veritas::Test*)));
@@ -125,6 +127,8 @@ TestRunner::TestRunner(ITestFramework* framework, ITestTreeBuilder* builder)
             SLOT(reloadTree()));
     connect(d->window, SIGNAL(requestReload()), 
             SLOT(reloadTree()));
+    connect(d->window, SIGNAL(requestReset()), 
+            SLOT(resetTree()));
 }
 
 void TestRunner::setupToolView(Veritas::Test* root)
@@ -164,29 +168,17 @@ void TestRunner::removeResultsView()
 
 QWidget* TestRunner::runnerWidget()
 {
-    IProjectController* ipc = ICore::self()->projectController();
-    foreach(IProject* proj, ipc->projects()) {
-        d->window->addProjectToPopup(proj);
-    }
-    connect(ipc, SIGNAL(projectOpened(KDevelop::IProject*)),
-            d->window, SLOT(addProjectToPopup(KDevelop::IProject*)));
-    connect(ipc, SIGNAL(projectClosed(KDevelop::IProject*)),
-            this, SLOT(resetOnProjectClose(KDevelop::IProject*)));
     return d->window;
-}
-
-void TestRunner::resetOnProjectClose(KDevelop::IProject* closingProject)
-{
-    if (closingProject->name() == d->window->loadedProjectName()) {
-        // set empty tree
-        setupToolView(Test::createRoot());
-    }
-    d->window->rmProjectFromPopup(closingProject);
 }
 
 void TestRunner::reloadTree()
 {
     d->treeBuilder->reload(project());
+}
+
+void TestRunner::resetTree()
+{
+    setupToolView(Test::createRoot());
 }
 
 IProject* TestRunner::project() const

@@ -1,6 +1,7 @@
 /*
  * This file is part of KDevelop
  * Copyright 2008 Manuel Breugelmans <mbr.nxi@gmail.com>
+ * Copyright 2010 Daniel Calviño Sánchez <danxuliu@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +23,7 @@
 #define VERITAS_ITESTRUNNER_H
 
 #include <interfaces/iplugin.h>
+#include "projectselection.h"
 #include "veritasexport.h"
 
 class QWidget;
@@ -44,7 +46,15 @@ class VERITAS_EXPORT TestRunner : public QObject
 {
 Q_OBJECT
 public:
-    TestRunner(ITestFramework*, ITestTreeBuilder*);
+
+    /**
+     * Creates a new TestRunner.
+     * The IProjectFilter, if set, will be used in the runner toolview to prevent
+     * the user from selecting projects that don't meet the conditions to be
+     * used with this runner.
+     */
+    TestRunner(ITestFramework*, ITestTreeBuilder*,
+               ProjectSelection::IProjectFilter* projectFilter = 0);
     virtual ~TestRunner();
 
     /*! Create a new test runner widget
@@ -63,8 +73,14 @@ protected:
 
 private Q_SLOTS:
     void removeResultsView();
+
+    /*! Reloads the test tree for the selected project.
+     */
     void reloadTree();
-    void resetOnProjectClose(KDevelop::IProject*);
+
+    /*! Sets an empty test tree.
+     */
+    void resetTree();
 
 private:
     void spawnResultsView();

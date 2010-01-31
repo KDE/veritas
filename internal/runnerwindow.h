@@ -2,6 +2,7 @@
  *
  * Copyright 2006 Ernst Huber <qxrunner@systest.ch>
  * Copyright 2008 Manuel Breugelmans <mbr.nxi@gmail.com>
+ * Copyright 2010 Daniel Calviño Sánchez <danxuliu@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,6 +29,7 @@
 #include <QTime>
 #include <QProgressBar>
 #include <KUrl>
+#include "../projectselection.h"
 #include "../veritasexport.h"
 
 namespace KDevelop { class IProject; }
@@ -67,7 +69,12 @@ class VERITAS_EXPORT RunnerWindow : public QWidget
 Q_OBJECT
 public: // Operations
 
-    explicit RunnerWindow(ResultsModel*, QWidget* parent = 0, Qt::WFlags flags = 0);
+    /*! Creates a new RunnerWindow.
+     * The IProjectFilter, if set, will be used by the ProjectSelection in the
+     * toolbar.
+     */
+    explicit RunnerWindow(ResultsModel*, ProjectSelection::IProjectFilter* projectFilter = 0,
+                          QWidget* parent = 0, Qt::WFlags flags = 0);
 
     /*!\note
      * Deleting the model provided for the main window is left to
@@ -99,17 +106,15 @@ public: // Operations
 
     void resetProgressBar() const;
     KDevelop::IProject* selectedProject() const;
-    QString loadedProjectName() const;
 
 Q_SIGNALS:
     void runCompleted() const;
     void requestReload() const;
+    void requestReset() const;
 
 public Q_SLOTS:
 
     void showVerboseTestOutput();
-    void addProjectToPopup(KDevelop::IProject*);
-    void rmProjectFromPopup(KDevelop::IProject*);
     void openTestSource();
 
 private Q_SLOTS:
@@ -151,7 +156,12 @@ private Q_SLOTS:
         Vice versa if it is currently collapsed. */
     void expandOrCollapse(const QModelIndex& i) const;
 
-    void setSelectedProject(QAction*);
+    /*! Sets the project to show its tests.
+     * The project can be a null pointer, which cleans the shown tests.
+     *
+     * @param project The project to set as the selected one.
+     */
+    void setSelectedProject(KDevelop::IProject* project);
 
 
 private: // Operations
@@ -160,7 +170,12 @@ private: // Operations
     void initItemStatistics();
     void connectActions();
     void connectFocusStuff();
-    void addProjectMenu();
+
+    /*! Adds a ProjectSelection with the given projectFilter to the toolbar.
+     *
+     * @param projectFilter The IProjectFilter to use.
+     */
+    void addProjectMenu(ProjectSelection::IProjectFilter* projectFilter);
 
     // helpers for setModel(RunnerModel*)
     void stopPreviousModel();
@@ -208,7 +223,7 @@ private:
     ResultsWidget* m_results;
     SelectionManager* m_selection;     // is responsable for the fade-in out selection thingy
     OverlayManager* m_verbose;
-    KSelectAction* m_projectPopup;     // a dropdown box to select the 'current' project
+    ProjectSelection* m_projectSelection;     // a dropdown box to select the 'current' project
     QMap<QString, QAction*> m_project2action;
     QTime m_stopWatch;                 // times test-runs, shown in the gui
     TestExecutor* m_executor;
@@ -216,7 +231,7 @@ private:
     VerboseToggle* m_verboseToggle;
     ToSourceToggle* m_toSourceToggle;
     OverlayManager* m_toSource;
-    QString m_currentProject;
+    KDevelop::IProject* m_currentProject;
     int m_numItemsCompleted;
 };
 

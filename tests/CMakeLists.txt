@@ -1,6 +1,10 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories(..)
 
+# QtTest needs this in order to include the gui stuff.
+# The alternative (which requires Qt>=4.6) is #include <QTestGui>
+add_definitions(-DQT_GUI_LIB)
+
 macro(kdev_add_test test_EXEC)
     set(test_SRCS ${ARGN})
     qt4_automoc( ${test_SRCS} )
@@ -24,6 +28,7 @@ kdev_add_test(unit-treetraverse treetraversetest.cpp)
 kdev_add_test(unit-resultswidget resultswidgettest.cpp)
 kdev_add_test(unit-ctestfileparser ctestfileparsertest.cpp)
 kdev_add_test(unit-testresult testresulttest.cpp)
+kdev_add_test(unit-projectselection projectselectiontest.cpp)
 
 macro(veri_add_mem_test test_EXEC prefix)
     add_test(veritas-mem-${test_EXEC}
@@ -41,4 +46,5 @@ veri_add_mem_test(resultswidget unit)
 veri_add_mem_test(runnerwindow sys)
 veri_add_mem_test(ctestfileparser unit)
 veri_add_mem_test(testresult unit)
+veri_add_mem_test(projectselection unit)
 

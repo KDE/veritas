@@ -2,6 +2,7 @@
  *
  * Copyright 2006 Ernst Huber <qxrunner@systest.ch>
  * Copyright 2008 Manuel Breugelmans <mbr.nxi@gmail.com>
+ * Copyright 2010 Daniel Calviño Sánchez <danxuliu@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -67,6 +68,7 @@ static void initVeritasResource()
 using KDevelop::ICore;
 using KDevelop::IDocumentController;
 
+using Veritas::ProjectSelection;
 using Veritas::RunnerWindow;
 using Veritas::RunnerModel;
 using Veritas::RunnerProxyModel;
@@ -107,8 +109,9 @@ void TestBar::turnRed()
 }
 
 
-RunnerWindow::RunnerWindow(ResultsModel* rmodel, QWidget* parent, Qt::WFlags flags)
-        : QWidget(parent, flags), m_executor(0), m_isRunning(false)
+RunnerWindow::RunnerWindow(ResultsModel* rmodel, ProjectSelection::IProjectFilter* projectFilter,
+                           QWidget* parent, Qt::WFlags flags)
+        : QWidget(parent, flags), m_executor(0), m_isRunning(false), m_currentProject(0)
 {
     initVeritasResource();
     m_ui = new Ui::RunnerWindow;
@@ -120,7 +123,7 @@ RunnerWindow::RunnerWindow(ResultsModel* rmodel, QWidget* parent, Qt::WFlags fla
     connectFocusStuff();
     progressBar()->setTextVisible(false);
     progressBar()->show();
-    addProjectMenu();
+    addProjectMenu(projectFilter);
 
     // Disable user interaction while there is no data.
     enableItemActions(false);
@@ -201,63 +204,30 @@ void RunnerWindow::openTestSource()
 }
 
 // helper for RunnerWindow(...)
-void RunnerWindow::addProjectMenu()
+void RunnerWindow::addProjectMenu(ProjectSelection::IProjectFilter* projectFilter)
 {
-    KSelectAction *m = new KSelectAction(i18n("Project"), this);
-    m->setToolTip(i18n("Select project"));
-    m->setToolBarMode(KSelectAction::MenuMode);
+    m_projectSelection = new ProjectSelection(this, projectFilter);
+    m_projectSelection->setToolBarMode(KSelectAction::MenuMode);
     m_ui->runnerToolBar->addSeparator();
-    m_ui->runnerToolBar->addAction(m);
-    m_projectPopup = m;
-    connect(m_projectPopup, SIGNAL(triggered(QAction*)),
-            SLOT(setSelectedProject(QAction*)));
+    m_ui->runnerToolBar->addAction(m_projectSelection);
+    connect(m_projectSelection, SIGNAL(projectSelected(KDevelop::IProject*)),
+            SLOT(setSelectedProject(KDevelop::IProject*)));
 }
 
-void RunnerWindow::setSelectedProject(QAction* action)
+void RunnerWindow::setSelectedProject(KDevelop::IProject* project)
 {
-    if (!action) return;
-    QString project = action->data().value<QString>();
-    Q_ASSERT(m_project2action.contains(project));
     m_currentProject = project;
-    emit requestReload();
-}
 
-void RunnerWindow::addProjectToPopup(IProject* proj)
-{
-    QAction* p = new QAction(proj->name(), this);
-    QVariant v;
-    v.setValue(proj->name());
-    p->setData(v);
-    m_projectPopup->addAction(p);
-    m_project2action[proj->name()] = p;
-}
-
-QString RunnerWindow::loadedProjectName() const
-{
-    return m_currentProject;
-}
-
-void RunnerWindow::rmProjectFromPopup(IProject* proj)
-{
-    QString projectName = proj->name();
-    if (m_project2action.contains(projectName)) {
-        QAction* p = m_project2action[projectName];
-        m_projectPopup->removeAction(p);
-        m_project2action.remove(projectName);
+    if (m_currentProject) {
+        emit requestReload();
+    } else {
+        emit requestReset();
     }
 }
 
 IProject* RunnerWindow::selectedProject() const
 {
-    if (m_currentProject.isEmpty()) return 0;
-    IProject* selected = 0;
-    foreach(IProject* proj, ICore::self()->projectController()->projects()) {
-        if (m_currentProject == proj->name()) {
-            selected = proj;
-            break;
-        }
-    }
-    return selected;
+    return m_currentProject;
 }
 
 namespace
@@ -663,7 +633,7 @@ void RunnerWindow::disableControlsBeforeRunning()
     enableItemActions(false);
 
     m_ui->actionStop->setEnabled(true);
-    m_projectPopup->setEnabled(false);
+    m_projectSelection->setEnabled(false);
     m_ui->actionReload->setEnabled(false);
     runnerView()->setCursor(QCursor(Qt::BusyCursor));
     runnerView()->setFocus();
@@ -679,7 +649,7 @@ void RunnerWindow::enableControlsAfterRunning() const
 
     m_ui->actionStop->setDisabled(true);
     m_ui->actionReload->setEnabled(true);
-    m_projectPopup->setEnabled(true);
+    m_projectSelection->setEnabled(true);
     runnerView()->setCursor(QCursor());
     runnerView()->setFocus();
     runnerView()->setSelectionMode(QAbstractItemView::SingleSelection);
