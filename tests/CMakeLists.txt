@@ -46,5 +46,6 @@ veri_add_mem_test(resultswidget unit)
 veri_add_mem_test(runnerwindow sys)
 veri_add_mem_test(ctestfileparser unit)
 veri_add_mem_test(testresult unit)
-veri_add_mem_test(projectselection unit)
+# Disabled as it is too slow and uses too much memory (as it uses a KDevelop::Core)
+# veri_add_mem_test(projectselection unit)
 
