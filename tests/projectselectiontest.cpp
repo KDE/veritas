@@ -42,6 +42,7 @@
 #include <shell/core.h>
 #include <tests/autotestshell.h>
 
+using KDevelop::AutoTestShell;
 using KDevelop::Core;
 using KDevelop::IProject;
 
