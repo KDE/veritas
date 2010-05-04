@@ -1,6 +1,7 @@
 /* KDevelop xUnit plugin
  *
  * Copyright 2008 Manuel Breugelmans <mbr.nxi@gmail.com>
+ * Copyright 2010 Daniel Calviño Sánchez <danxuliu@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,6 +40,7 @@ FilesystemAccess::~FilesystemAccess()
 bool FilesystemAccess::changeDir(const KUrl& dir)
 {
     m_currentDir = dir;
+    m_currentDir.adjustPath(KUrl::AddTrailingSlash);
     return true;
 }
 

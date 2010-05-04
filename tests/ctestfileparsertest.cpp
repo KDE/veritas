@@ -1,6 +1,7 @@
 /* KDevelop xUnit plugin
  *
  * Copyright 2008 Manuel Breugelmans <mbr.nxi@gmail.com>
+ * Copyright 2010 Daniel Calviño Sánchez <danxuliu@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -318,6 +319,23 @@ void CTestfileParserTest::testRealFileSystemAccess()
     KVERIFY(foo_->exists());
     foo_->open(QIODevice::ReadOnly | QIODevice::Text);
     QCOMPARE(QByteArray("foo_content"), foo_->readLine());
+
+    //Check with an URL without trailing slash
+    tmpUrl = tmp.absolutePath();
+    tmpUrl.adjustPath( KUrl::RemoveTrailingSlash );
+    fsa.changeDir(tmpUrl);
+    tmpUrl.adjustPath( KUrl::AddTrailingSlash );
+    KOMPARE(tmpUrl, fsa.currentDirectory());
+
+    KVERIFY(fsa.listing().contains( "foo" ));
+    KVERIFY(fsa.listing().contains( "bar" ));
+    KVERIFY_MSG(2 <= fsa.listing().size(), fsa.listing().join( "\n" ));
+ 
+    QFile* bar_ = qobject_cast<QFile*>(fsa.file( "bar" ));
+    KVERIFY(bar_);
+    KVERIFY(bar_->exists());
+    bar_->open(QIODevice::ReadOnly | QIODevice::Text);
+    QCOMPARE(QByteArray("bar_content"), bar_->readLine());
 
     // teardown
     foo_->close();
