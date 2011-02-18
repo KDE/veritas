@@ -256,6 +256,10 @@ public:
         //return m_factory->toolBarActions(viewWidget);
         return QList<QAction*>();
     }
+    QList< QAction* > contextMenuActions(QWidget* viewWidget) const {
+	Q_UNUSED(viewWidget);
+	return QList<QAction*>();
+    }
     QString id() const { return m_factory->id(); }
     virtual bool viewsWantProgressIndicator() const { return false; }
 

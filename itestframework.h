@@ -22,7 +22,6 @@
 #define VERITAS_ITESTFRAMEWORK_H
 
 #include <QtCore/QVariantList>
-#include <interfaces/iextension.h>
 #include "veritasexport.h"
 
 
@@ -79,7 +78,6 @@ void initializeProjectConfig(const QVariantList& args) {
 
 }
 
-KDEV_DECLARE_EXTENSION_INTERFACE_NS( Veritas, ITestFramework, "org.kdevelop.ITestFramework")
 Q_DECLARE_INTERFACE( Veritas::ITestFramework, "org.kdevelop.ITestFramework")
 
 #endif // VERITAS_ITESTFRAMEWORK_H
