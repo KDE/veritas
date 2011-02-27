@@ -144,7 +144,6 @@ void TestRunner::setupToolView(Veritas::Test* root)
     model->setRootItem(root);
     model->setExpectedResults(Veritas::RunError);
     d->window->setModel(model);
-    d->window->runnerView()->setRootIsDecorated(false);
     d->window->resetProgressBar();
     if (!d->resultsView) spawnResultsView();
 }

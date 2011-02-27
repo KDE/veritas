@@ -117,8 +117,6 @@ RunnerWindow::RunnerWindow(ResultsModel* rmodel, ProjectSelection::IProjectFilte
     m_ui = new Ui::RunnerWindow;
     m_ui->setupUi(this);
     m_results = new ResultsWidget();
-    runnerView()->setRootIsDecorated(false);
-    runnerView()->setUniformRowHeights(true);
 
     connectFocusStuff();
     progressBar()->setTextVisible(false);
@@ -163,12 +161,6 @@ RunnerWindow::RunnerWindow(ResultsModel* rmodel, ProjectSelection::IProjectFilte
     m_ui->actionSelectAll->setIcon(select);
     QPixmap deselect = KIconLoader::global()->loadIcon("list-remove", KIconLoader::Small);
     m_ui->actionUnselectAll->setIcon(deselect);
-
-    runnerView()->setStyleSheet(
-        "QTreeView::branch{"
-        "image: none;"
-        "border-image: none"
-        "}");
 
     connect(runnerView(),  SIGNAL(clicked(QModelIndex)),
             SLOT(expandOrCollapse(QModelIndex)));
