@@ -47,7 +47,7 @@ public:
     void operator()(Test* t) {
         Q_ASSERT(m_store);
         if (m_store->wasDeselected(t)) {
-            t->internal()->unCheckNonRecursive();
+            t->internal()->setCheckState(Qt::Unchecked);
         }
     }
     SelectionStore* m_store;
@@ -58,7 +58,12 @@ public:
 void SelectionStore::saveState(Test* test)
 {
     Q_ASSERT(test);
-    if (!test->internal()->isChecked()) {
+    if (test->childCount() > 0)
+    {
+      // We only have to store the state for the leafs
+      return;
+    }
+    if (!test->internal()->checkState() == Qt::Unchecked) {
         m_deselected << serialize(test);
     }
 }

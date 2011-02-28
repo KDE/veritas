@@ -46,15 +46,10 @@ public:
 
     QVariant data(int column) const;
     void setData(int column, const QVariant& value);
-
-    /*! Is this item checked by the user in the tree-runnerview? */
-    bool isChecked() const;
-    /*! Check this test and all its children */
-    void check();
-    /*! Recursively lift check state */
-    void unCheck();
-    /*! Uncheck only this test, not it's children */
-    void unCheckNonRecursive();
+    
+    void setCheckState(Qt::CheckState state);
+    Qt::CheckState checkState() const;
+    void updateCheckState();
 
     bool isRunning() const;
     void setIsRunning(bool);
@@ -66,7 +61,7 @@ private:
     QString name;
     QModelIndex index_;
     TestResult* result;
-    bool isChecked_;
+    Qt::CheckState checkState_;
     QMap<QString, Test*> childMap;
     QList<Test*> children;
     QList<QVariant> itemData;

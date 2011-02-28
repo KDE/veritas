@@ -58,7 +58,7 @@ public:
 
 void SetupChain::operator()(Test* current)
 {
-    if (!(current->shouldRun() && current->internal()->isChecked())) {
+    if (!(current->shouldRun() && current->internal()->checkState() == Qt::Checked)) {
         return;           // only run if is an exe and selected
     }
     if (!m_previous) { // first test in the chain.

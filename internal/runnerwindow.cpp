@@ -30,8 +30,8 @@
 #include "resultsproxymodel.h"
 #include "runnermodel.h"
 #include "runnerproxymodel.h"
-#include "selectionmanager.h"
 #include "overlaytoggle.h"
+#include "overlaymanager.h"
 #include "testexecutor.h"
 
 #include <ktexteditor/cursor.h>
@@ -137,10 +137,6 @@ RunnerWindow::RunnerWindow(ResultsModel* rmodel, ProjectSelection::IProjectFilte
     resultsView()->setModel(rproxy);
     m_results->setResizeMode();
 
-    m_selection = new SelectionManager(runnerView());
-    SelectionToggle* selectionToggle = new SelectionToggle(runnerView()->viewport());
-    m_selection->setButton(selectionToggle);
-
     m_verbose = new OverlayManager(runnerView());
     m_verboseToggle = new VerboseToggle(runnerView()->viewport());
     connect(m_verboseToggle, SIGNAL(clicked(bool)),SLOT(showVerboseTestOutput()));
@@ -161,9 +157,6 @@ RunnerWindow::RunnerWindow(ResultsModel* rmodel, ProjectSelection::IProjectFilte
     m_ui->actionSelectAll->setIcon(select);
     QPixmap deselect = KIconLoader::global()->loadIcon("list-remove", KIconLoader::Small);
     m_ui->actionUnselectAll->setIcon(deselect);
-
-    connect(runnerView(),  SIGNAL(clicked(QModelIndex)),
-            SLOT(expandOrCollapse(QModelIndex)));
 
     const char* whatsthis = "xTest runner. First select a project from the rightmost dropdown box. Next, load the test tree by clicking on the green circular arrow icon. Run your tests with a click on the leftmost green arrow icon.";
     setWhatsThis( i18n(whatsthis) );
@@ -230,7 +223,7 @@ class SelectedLeafCount
 public:
     SelectedLeafCount() : result(0) {}
     void operator()(Test* t) {
-        if ((t->childCount() == 0) && t->internal()->isChecked()) {
+        if ((t->childCount() == 0) && t->internal()->checkState() == Qt::Checked) {
             result++;
         }
     }
@@ -314,7 +307,6 @@ void RunnerWindow::selectAll()
 RunnerWindow::~RunnerWindow()
 {
     // Deleting the model is left to the owner of the model instance.
-    if (m_selection) delete m_selection;
     if (m_verbose) delete m_verbose;
     if (m_executor) {
         m_executor->stop();
@@ -390,7 +382,6 @@ void RunnerWindow::connectProgressIndicators(RunnerModel* model)
 void RunnerWindow::setModel(RunnerModel* model)
 {
     m_verbose->reset();
-    m_selection->reset();
     stopPreviousModel();
     if (!model) {
         // No user interaction without a model or an empty one
@@ -408,15 +399,11 @@ void RunnerWindow::setModel(RunnerModel* model)
     enableItemActions(true);
     m_ui->actionStop->setDisabled(true);
 
-    connect(m_selection, SIGNAL(selectionChanged()),
-            runnerModel(), SLOT(countItems()));
-
     // set top row higlighted
     runnerView()->setCurrentIndex(runnerProxyModel()->index(0, 0));
     enableToSource();
     enableTestSync(true);
     m_verbose->makeConnections();
-    m_selection->makeConnections();
     m_toSource->makeConnections();
     runnerView()->resizeColumnToContents(0);
 }

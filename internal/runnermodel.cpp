@@ -88,12 +88,12 @@ RunnerModel::~RunnerModel()
 
 void RunnerModel::checkAll()
 {
-    if (m_rootItem) m_rootItem->internal()->check();
+    if (m_rootItem) m_rootItem->internal()->setCheckState(Qt::Checked);
 }
 
 void RunnerModel::uncheckAll()
 {
-    if (m_rootItem) m_rootItem->internal()->unCheck();
+    if (m_rootItem) m_rootItem->internal()->setCheckState(Qt::Unchecked);
 }
 
 QVariant RunnerModel::data(const QModelIndex& index, int role) const
@@ -106,10 +106,8 @@ QVariant RunnerModel::data(const QModelIndex& index, int role) const
         return int(Qt::AlignLeft | Qt::AlignTop);
     case Qt::DisplayRole :
         return testFromIndex(index)->name();
-    case Qt::TextColorRole :
-        return testFromIndex(index)->internal()->isChecked() ?
-                Qt::black :
-                Qt::lightGray;
+    case Qt::CheckStateRole :
+        return testFromIndex(index)->internal()->checkState();
     case Qt::DecorationRole :
         if (index.child(0, 0).isValid()) { // not a leaf test
             return computeIconFromChildState(testFromIndex(index));
@@ -173,9 +171,18 @@ QVariant RunnerModel::computeIconFromChildState(Veritas::Test* test) const
 
 bool RunnerModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    Q_UNUSED(index);
-    Q_UNUSED(value);
-    Q_UNUSED(role);
+    if ( role == Qt::CheckStateRole )
+    {
+        testFromIndex(index)->internal()->setCheckState((Qt::CheckState)value.toInt());
+        QModelIndex parent = index;
+        while (parent.isValid()) {
+            emit dataChanged(parent, parent);
+            parent = parent.parent();
+        }
+        for (int i = 0; i < rowCount(index); ++i) {
+            setData(index.child(i,0), value, Qt::CheckStateRole);
+        }
+    }
     return false;
 }
 
@@ -193,7 +200,7 @@ Qt::ItemFlags RunnerModel::flags(const QModelIndex& index) const
     if (!index.isValid()) {
         return 0;
     }
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable;
 }
 
 QModelIndex RunnerModel::index(int row, int column, const QModelIndex& parent) const
@@ -270,7 +277,7 @@ void RunnerModel::countItems()
         }
         Test* item = testFromIndex(currentIndex);    // Have an item.
         numTotal++;
-        if (item->internal()->isChecked() && !hasChildren(currentIndex)) {
+        if (item->internal()->checkState() == Qt::Checked && !hasChildren(currentIndex)) {
             m_numSelected++;
         }
         switch (item->state()) {

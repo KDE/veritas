@@ -49,7 +49,7 @@ Test::Test(const QList<QVariant>& data, Test* parent)
     } else {
         d->name.clear();
     }
-    d->check();
+    d->setCheckState(Qt::Checked);
     d->needVerboseToggle = false;
     d->needSelectionToggle = false;
 }
@@ -64,7 +64,7 @@ Test::Test(const QString& name, Test* parent)
     for (int i=0; i < Internal::columnCount; i++) {
         d->itemData << QString();
     }
-    d->check();
+    d->setCheckState(Qt::Checked);
     d->needVerboseToggle = false;
     d->needSelectionToggle = false;
     d->supportsToSource = false;

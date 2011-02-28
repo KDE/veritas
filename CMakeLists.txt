@@ -39,7 +39,7 @@ set(veritas_SRCS
     internal/runnermodel.cpp
     internal/runnerproxymodel.cpp
     internal/runnerwindow.cpp
-    internal/selectionmanager.cpp
+   
     internal/overlaymanager.cpp
     internal/overlaytoggle.cpp
     internal/resultswidget.cpp

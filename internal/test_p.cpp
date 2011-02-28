@@ -19,6 +19,7 @@
 */
 
 #include "test_p.h"
+#include <KDebug>
 
 using Veritas::Test;
 
@@ -68,30 +69,52 @@ void Test::Internal::clear()
     m_isRunning = false;
 }
 
-bool Test::Internal::isChecked() const
+void Test::Internal::setCheckState(Qt::CheckState state)
 {
-    return isChecked_;
-}
-
-void Test::Internal::check()
-{
-    isChecked_ = true;
-    foreach (Test* child, children) {
-        child->internal()->check();
+    if (checkState_ != state) {
+        checkState_ = state;
+        if (state != Qt::PartiallyChecked) {
+            foreach (Test* child, children) {
+                child->internal()->setCheckState(state);
+            }
+        }
+        if (self && self->parent()) {
+            self->parent()->internal()->updateCheckState();
+        }
     }
 }
 
-void Test::Internal::unCheckNonRecursive()
+Qt::CheckState Test::Internal::checkState() const
 {
-    isChecked_ = false;
+    return checkState_;
 }
 
-void Test::Internal::unCheck()
+void Test::Internal::updateCheckState()
 {
-    isChecked_ = false;
-    foreach (Test* child, children) {
-        child->internal()->unCheck();
+    Qt::CheckState newState = checkState_;
+    if (checkState_ == Qt::PartiallyChecked && children.isEmpty()) {
+        newState = Qt::Checked;
     }
+    else if (!children.isEmpty()) {
+        bool checkedChildren = false;
+        bool unCheckedChildren = false;
+        foreach (Test* child, children) {
+            child->internal()->updateCheckState();
+            checkedChildren |= child->internal()->checkState() != Qt::Unchecked;
+            unCheckedChildren |= child->internal()->checkState() != Qt::Checked;
+            if (checkedChildren && unCheckedChildren) {
+                newState = Qt::PartiallyChecked;
+                break;
+            }
+        }
+        if (checkedChildren && !unCheckedChildren) {
+            newState = Qt::Checked;
+        }
+        else if (unCheckedChildren && !checkedChildren) {
+            newState = Qt::Unchecked;
+        }
+    }
+    setCheckState(newState);
 }
 
 bool Test::Internal::isRunning() const

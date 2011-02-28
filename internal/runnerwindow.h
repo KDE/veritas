@@ -221,7 +221,6 @@ private: // Operations
 private:
     Ui::RunnerWindow *m_ui;            // QtDesigner main object
     ResultsWidget* m_results;
-    SelectionManager* m_selection;     // is responsable for the fade-in out selection thingy
     OverlayManager* m_verbose;
     ProjectSelection* m_projectSelection;     // a dropdown box to select the 'current' project
     QMap<QString, QAction*> m_project2action;
