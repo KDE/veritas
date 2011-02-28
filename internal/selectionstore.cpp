@@ -63,7 +63,7 @@ void SelectionStore::saveState(Test* test)
       // We only have to store the state for the leafs
       return;
     }
-    if (!test->internal()->checkState() == Qt::Unchecked) {
+    if (test->internal()->checkState() == Qt::Unchecked) {
         m_deselected << serialize(test);
     }
 }
