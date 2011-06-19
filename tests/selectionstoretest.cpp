@@ -45,18 +45,18 @@ void SelectionStoreTest::cleanup()
 
 void SelectionStoreTest::rootOnly()
 {
-    m_root->internal()->check();
+    m_root->internal()->setCheckState(Qt::Checked);
     m_store->saveState(m_root);
     KVERIFY(!m_store->wasDeselected(m_root));
 
-    m_root->internal()->unCheck();
+    m_root->internal()->setCheckState(Qt::Unchecked);
     m_store->saveState(m_root);
     KVERIFY(m_store->wasDeselected(m_root));
 }
 
 void SelectionStoreTest::newObject()
 {
-    m_root->internal()->unCheck();
+    m_root->internal()->setCheckState(Qt::Unchecked);
     m_store->saveState(m_root);
 
     Test* root2 = new Test("root", 0);
@@ -71,9 +71,9 @@ void SelectionStoreTest::saveMultiple()
     Test* test2 = new Test("test2", 0);
     Test* test3 = new Test("test3", 0);
 
-    test1->internal()->unCheck();
-    test2->internal()->check();
-    test3->internal()->unCheck();
+    test1->internal()->setCheckState(Qt::Unchecked);
+    test2->internal()->setCheckState(Qt::Checked);
+    test3->internal()->setCheckState(Qt::Unchecked);
 
     m_store->saveState(test1);
     m_store->saveState(test2);
@@ -93,8 +93,8 @@ void SelectionStoreTest::testTree()
     Test* child1 = new Test("test2", m_root);
     Test* child2 = new Test("test3", m_root);
 
-    child1->internal()->check();
-    child2->internal()->unCheck();
+    child1->internal()->setCheckState(Qt::Checked);
+    child2->internal()->setCheckState(Qt::Unchecked);
 
     m_store->saveState(child1);
     m_store->saveState(child2);
@@ -109,8 +109,8 @@ void SelectionStoreTest::testTreeWithIdenticalNames()
     Test* root2 = new Test("root2", 0);
     Test* child2 = new Test("child", root2);
 
-    child1->internal()->check();
-    child2->internal()->unCheck();
+    child1->internal()->setCheckState(Qt::Checked);
+    child2->internal()->setCheckState(Qt::Unchecked);
 
     m_store->saveState(child1);
     m_store->saveState(child2);
@@ -135,10 +135,10 @@ void SelectionStoreTest::saveRecursive()
     m_root->addChild(child2);
     child2->addChild(child21);
 
-    m_root->internal()->check();
-    child1->internal()->check();
-    child2->internal()->unCheck();
-    child21->internal()->unCheck();
+    m_root->internal()->setCheckState(Qt::Checked);
+    child1->internal()->setCheckState(Qt::Checked);
+    child2->internal()->setCheckState(Qt::Unchecked);
+    child21->internal()->setCheckState(Qt::Unchecked);
 
     m_store->saveTree(m_root);
 
@@ -164,10 +164,10 @@ void SelectionStoreTest::restoreRecursive()
     Test* child21 = new Test("test21", child2);
     child2->addChild(child21);
 
-    m_root->internal()->check();
-    child1->internal()->check();
-    child2->internal()->unCheck();
-    child21->internal()->unCheck();
+    m_root->internal()->setCheckState(Qt::Checked);
+    child1->internal()->setCheckState(Qt::Checked);
+    child2->internal()->setCheckState(Qt::Unchecked);
+    child21->internal()->setCheckState(Qt::Unchecked);
 
     m_store->saveTree(m_root);
 
@@ -189,31 +189,31 @@ void SelectionStoreTest::restoreRecursive()
 
     m_store->restoreTree(m_root);
 
-    KVERIFY(m_root->internal()->isChecked());
-    KVERIFY(child1->internal()->isChecked());
-    KVERIFY(!child2->internal()->isChecked());
-    KVERIFY(!child21->internal()->isChecked());
-    KVERIFY(child22->internal()->isChecked()); // newly added test, so checked
-    KVERIFY(child3->internal()->isChecked());
+    KVERIFY(m_root->internal()->checkState()==Qt::Checked);
+    KVERIFY(child1->internal()->checkState()==Qt::Checked);
+    KVERIFY(!child2->internal()->checkState()==Qt::Checked);
+    KVERIFY(!child21->internal()->checkState()==Qt::Checked);
+    KVERIFY(child22->internal()->checkState()==Qt::Checked); // newly added test, so checked
+    KVERIFY(child3->internal()->checkState()==Qt::Checked);
 }
 
 void SelectionStoreTest::ignoreRoot()
 {
     // The invisible m_root of the test-tree should not be saved/restored.
-    m_root->internal()->check();
+    m_root->internal()->setCheckState(Qt::Checked);
     m_store->saveTree(m_root);
 
     Test* root2 = new Test("root", 0);
     m_store->restoreTree(root2);
-    KVERIFY(root2->internal()->isChecked());
+    KVERIFY(root2->internal()->checkState()==Qt::Checked);
 
-    m_root->internal()->unCheck();
+    m_root->internal()->setCheckState(Qt::Unchecked);
     m_store->saveTree(m_root);
 
     delete root2;
     root2 = new Test("root", 0);
     m_store->restoreTree(root2);
-    KVERIFY(root2->internal()->isChecked());
+    KVERIFY(root2->internal()->checkState()==Qt::Checked);
 
     delete root2;
 }
@@ -231,8 +231,8 @@ void SelectionStoreTest::selectedChildDeselectedParent()
     Test* child = new Test("child", parent);
     parent->addChild(child);
 
-    parent->internal()->unCheck();
-    child->internal()->check();
+    parent->internal()->setCheckState(Qt::Unchecked);
+    child->internal()->setCheckState(Qt::Checked);
 
     m_store->saveTree(m_root);
 
@@ -246,8 +246,8 @@ void SelectionStoreTest::selectedChildDeselectedParent()
 
     m_store->restoreTree(m_root);
 
-    KVERIFY(!parent->internal()->isChecked());
-    KVERIFY(child->internal()->isChecked());
+    KVERIFY(!parent->internal()->checkState()==Qt::Checked);
+    KVERIFY(child->internal()->checkState()==Qt::Checked);
 }
 
 QTEST_MAIN( SelectionStoreTest )

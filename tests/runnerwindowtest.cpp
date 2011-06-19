@@ -82,17 +82,17 @@ void RunnerWindowTest::checkAllItems(checkMemberFun f)
 // helper
 bool RunnerWindowTest::isSelected(TestStub* item)
 {
-    return item->internal()->isChecked();
+    return item->internal()->checkState() == Qt::Checked;
 }
 
 // helper
 void RunnerWindowTest::selectSome()
 {
-    model->item1->internal()->check();
-    model->child11->internal()->check();
-    model->child12->internal()->unCheck();
-    model->item2->internal()->unCheck();
-    model->child21->internal()->check();
+    model->item1->internal()->setCheckState(Qt::Checked);
+    model->child11->internal()->setCheckState(Qt::Checked);
+    model->child12->internal()->setCheckState(Qt::Unchecked);
+    model->item2->internal()->setCheckState(Qt::Unchecked);
+    model->child21->internal()->setCheckState(Qt::Checked);
 }
 
 // command
@@ -109,7 +109,7 @@ void RunnerWindowTest::selectAll()
 // helper
 bool RunnerWindowTest::isNotSelected(TestStub* item)
 {
-    return !item->internal()->isChecked();
+    return !item->internal()->checkState() == Qt::Checked;
 }
 
 // command

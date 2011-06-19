@@ -304,7 +304,7 @@ void TestExecutorTest::unbalancedAggregates()
 TestStub* TestExecutorTest::createDeselectedTest(const QString& name, Test* parent, QSignalSpy*& s)
 {
     TestStub* t = createEnabledTest(name, parent, s);
-    t->internal()->unCheck();
+    t->internal()->setCheckState(Qt::Unchecked);
     return t;
 }
 

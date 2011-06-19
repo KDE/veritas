@@ -66,7 +66,7 @@ void TestTest::simpleRoot()
 {
     assertNrofChildren(m_root, 0);
     assertDefaultResult(m_root);
-    KVERIFY_MSG(m_root->internal()->isChecked(), "Not selected. Item should be enabled by default");
+    KVERIFY_MSG(m_root->internal()->checkState()==Qt::Checked, "Not selected. Item should be enabled by default");
     KOMPARE_MSG(0, m_root->row(), "No parent so should surely be the first row");
     KOMPARE(NULL, m_root->parent());
     KOMPARE("", m_root->name());
