@@ -462,6 +462,20 @@ void RunnerWindow::updateNumTotal(int numItems)
 void RunnerWindow::updateNumSelected(int numItems)
 {
     m_numItemsSelected = numItems++;
+
+    if(!m_numItemsSelected) {
+        m_ui->actionUnselectAll->setDisabled(true);
+        m_ui->actionStart->setDisabled(true);
+        m_ui->actionSelectAll->setDisabled(false);
+    } else if(m_numItemsSelected == m_numTotalItems) {
+        m_ui->actionUnselectAll->setDisabled(false);
+        m_ui->actionStart->setDisabled(false);
+        m_ui->actionSelectAll->setDisabled(true);
+    } else {
+        m_ui->actionUnselectAll->setDisabled(false);
+        m_ui->actionStart->setDisabled(false);
+        m_ui->actionSelectAll->setDisabled(false);
+    }
     resetProgressBar();
 }
 
