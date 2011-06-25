@@ -293,6 +293,9 @@ void RunnerWindow::connectActions()
 void RunnerWindow::unselectAll()
 {
     runnerModel()->uncheckAll();
+    m_ui->actionUnselectAll->setDisabled(true);
+    m_ui->actionStart->setDisabled(true);
+    m_ui->actionSelectAll->setDisabled(false);
     resetProgressBar();
     runnerView()->viewport()->update();
 }
@@ -300,6 +303,9 @@ void RunnerWindow::unselectAll()
 void RunnerWindow::selectAll()
 {
     runnerModel()->checkAll();
+    m_ui->actionSelectAll->setDisabled(true);
+    m_ui->actionStart->setDisabled(false);
+    m_ui->actionUnselectAll->setDisabled(false);
     resetProgressBar();
     runnerView()->viewport()->update();
 }
