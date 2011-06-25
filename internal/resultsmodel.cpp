@@ -68,6 +68,7 @@ QVariant ResultsModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case Qt::TextAlignmentRole:
         return int(Qt::AlignLeft | Qt::AlignTop);
+    case Qt::ToolTipRole:
     case Qt::DisplayRole:
         Q_ASSERT(index.row() < m_results.size());
         // col0 -> owner test name
