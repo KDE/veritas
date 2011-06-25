@@ -107,7 +107,9 @@ QVariant RunnerModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole :
         return testFromIndex(index)->name();
     case Qt::CheckStateRole :
-        return testFromIndex(index)->internal()->checkState();
+        t = testFromIndex(index);
+	if(t->shouldRun())
+		return t->internal()->checkState();
     case Qt::DecorationRole :
         if (index.child(0, 0).isValid()) { // not a leaf test
             return computeIconFromChildState(testFromIndex(index));
@@ -171,7 +173,7 @@ QVariant RunnerModel::computeIconFromChildState(Veritas::Test* test) const
 
 bool RunnerModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if ( role == Qt::CheckStateRole )
+    if ( role == Qt::CheckStateRole  && testFromIndex(index)->shouldRun())
     {
         testFromIndex(index)->internal()->setCheckState((Qt::CheckState)value.toInt());
         QModelIndex parent = index;
@@ -182,6 +184,8 @@ bool RunnerModel::setData(const QModelIndex& index, const QVariant& value, int r
         for (int i = 0; i < rowCount(index); ++i) {
             setData(index.child(i,0), value, Qt::CheckStateRole);
         }
+        // Recount selected items. This causes signals to be emitted
+        countItems();
     }
     return false;
 }
@@ -200,7 +204,10 @@ Qt::ItemFlags RunnerModel::flags(const QModelIndex& index) const
     if (!index.isValid()) {
         return 0;
     }
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable;
+    if(testFromIndex(index)->shouldRun())
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
 QModelIndex RunnerModel::index(int row, int column, const QModelIndex& parent) const
@@ -366,7 +373,7 @@ void RunnerModel::setRootItem(Test* rootItem)
 void RunnerModel::initItemConnect(QModelIndex current)
 {
     while (current.isValid()) {
-        if (current.child(0, 0).isValid()) { // Go down 
+        if (current.child(0, 0).isValid()) { // Go down
             initItemConnect(current.child(0, 0));
         }
         Test* item = testFromIndex(current);
@@ -439,7 +446,7 @@ void RunnerModel::postItemCompleted(QModelIndex index)
         emitParentsChanged(index);
     } else {
         // only emit dataChanged singals for the last siblings
-        // purpose of this is to get rid of icon flickering for 
+        // purpose of this is to get rid of icon flickering for
         // the parents from running->ready->running->ready->running
         while (index.isValid() && isLastSibling(item)) {
             emit dataChanged(index, index);
@@ -453,7 +460,7 @@ void RunnerModel::emitParentsChanged(QModelIndex index)
 {
     while (index.isValid()) {
         emit dataChanged(index, index);
-        index = index.parent(); // the parent changed as well, since parent state is deduced 
+        index = index.parent(); // the parent changed as well, since parent state is deduced
                                 // from the state of it's children
     }
 }

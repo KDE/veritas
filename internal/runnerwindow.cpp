@@ -350,17 +350,20 @@ void RunnerWindow::initProxyModels(RunnerModel* model)
     RunnerProxyModel* proxy = new RunnerProxyModel(model);
     proxy->setSourceModel(model);
     runnerView()->setModel(proxy);
-    m_stopWatch = QTime();
+    m_allTestsStopWatch = QTime();
+    m_testStopWatch = QTime();
 }
 
 // helper for setModel(RunnerModel*)
 void RunnerWindow::connectItemStatistics(RunnerModel* model)
 {
     // Item statistics.
+    connect(model, SIGNAL(itemStarted(QModelIndex)),
+            SLOT(resetTestTime()));
     connect(model, SIGNAL(numTotalChanged(int)),
-            SLOT(displayNumTotal(int)));
+            SLOT(updateNumTotal(int)));
     connect(model, SIGNAL(numSelectedChanged(int)),
-            SLOT(displayNumSelected(int)));
+            SLOT(updateNumSelected(int)));
     connect(model, SIGNAL(numErrorsChanged(int)),
             SLOT(displayNumErrors(int)));
     connect(model, SIGNAL(numFatalsChanged(int)),
@@ -414,12 +417,18 @@ void RunnerWindow::setModel(RunnerModel* model)
     runnerView()->resizeColumnToContents(0);
 }
 
+void RunnerWindow::resetTestTime()
+{
+    m_testStopWatch.restart();
+}
+
 
 void RunnerWindow::displayProgress(int numItems) const
 {
     // Display only when there are selected items
     if (progressBar()->maximum() > 0) {
         progressBar()->setValue(numItems);
+        m_ui->labelRunText->setText(i18n("Running test %1 of %2", numItems, m_numItemsSelected));
     }
 }
 
@@ -428,26 +437,43 @@ void RunnerWindow::displayCompleted() const
     if (!m_isRunning) return;
     progressBar()->setValue(progressBar()->maximum());
     enableControlsAfterRunning();
-    updateRunText();
+
+    QString elapsed = "0.000";
+    if (m_allTestsStopWatch.isValid()) {
+        int mili = m_allTestsStopWatch.elapsed();
+        elapsed = QString("%1.%2").arg(int(mili/1000)).arg(mili%1000);
+    }
+
+    if(m_numItemsCompleted == m_numItemsSelected)
+        ui()->labelRunText->setText( i18nc("%2 is a real number like 1.355", "All tests completed in %1 seconds", elapsed) );
+    else
+        ui()->labelRunText->setText( i18nc("%3 is a real number like 1.355", "Stopped. Completed %1 tests of %2 in %3 seconds", m_numItemsCompleted, m_numItemsSelected, elapsed) );
+
     m_isRunning = false;
     emit runCompleted();
 }
 
-void RunnerWindow::displayNumTotal(int numItems) const
+void RunnerWindow::updateNumTotal(int numItems)
 {
-    Q_UNUSED(numItems);
+    m_numTotalItems = numItems;
+    updateSelectedText();
 }
 
-void RunnerWindow::displayNumSelected(int numItems) const
+void RunnerWindow::updateNumSelected(int numItems)
 {
-    if (numItems == 0) numItems++;
+    m_numItemsSelected = numItems++;
     resetProgressBar();
 }
 
 void RunnerWindow::displayNumCompleted(int numItems)
 {
     m_numItemsCompleted = numItems;
-    updateRunText();
+    QString elapsed = "0.000";
+    if (m_testStopWatch.isValid()) {
+        int mili = m_testStopWatch.elapsed();
+        elapsed = QString("%1.%2").arg(int(mili/1000)).arg(mili%1000);
+    }
+    ui()->labelRunText->setText( i18ncp("%2 is a real number like 1.355", "Completed test %1 in %2 seconds", "Ran %1 tests in %2 seconds", m_numItemsCompleted, elapsed) );
 }
 
 void RunnerWindow::displayNumErrors(int numItems) const
@@ -530,14 +556,10 @@ void RunnerWindow::syncTestWithResult(const QItemSelection& selected,
     enableTestSync(true);      // Enable selection handler again.
 }
 
-void RunnerWindow::updateRunText() const
+void RunnerWindow::updateSelectedText() const
 {
-    QString elapsed = "0.000";
-    if (m_stopWatch.isValid()) {
-        int mili = m_stopWatch.elapsed();
-        elapsed = QString("%1.%2").arg(int(mili/1000)).arg(mili%1000);
-    }
-    ui()->labelRunText->setText( i18ncp("%2 is a real number like 1.355", "Ran 1 test in %2 seconds", "Ran %1 tests in %2 seconds", m_numItemsCompleted, elapsed) );
+     if(m_numTotalItems)
+        ui()->labelRunText->setText( i18n("Selected %1 tests of %2", m_numItemsSelected, m_numTotalItems) );
 }
 
 void RunnerWindow::scrollToHighlightedRows() const
@@ -584,10 +606,12 @@ void RunnerWindow::runItems()
     }
     m_isRunning = true;
 
-    m_stopWatch = QTime();
+    m_allTestsStopWatch = QTime();
+    m_testStopWatch = QTime();
     progressBar()->turnGreen();
     displayNumCompleted(0);
-    m_stopWatch.start();
+    m_allTestsStopWatch.start();
+    m_testStopWatch.start();
 
     disableControlsBeforeRunning();
     resultsModel()->clear();
