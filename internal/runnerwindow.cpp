@@ -487,7 +487,7 @@ void RunnerWindow::displayNumCompleted(int numItems)
         int mili = m_testStopWatch.elapsed();
         elapsed = QString("%1.%2").arg(int(mili/1000)).arg(mili%1000);
     }
-    ui()->labelRunText->setText( i18ncp("%2 is a real number like 1.355", "Completed test %1 in %2 seconds", "Ran %1 tests in %2 seconds", m_numItemsCompleted, elapsed) );
+    ui()->labelRunText->setText( i18nc("%2 is a real number like 1.355", "Completed test %1 in %2 seconds", m_numItemsCompleted, elapsed) );
 }
 
 void RunnerWindow::displayNumErrors(int numItems) const
