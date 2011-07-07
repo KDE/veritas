@@ -74,11 +74,11 @@ RunnerModel::RunnerModel(QObject* parent)
     setExpectedResults(Veritas::AllStates);
     //ModelTest* tm = new ModelTest(this);
 
-    g_aggregateRunnningIcon = QIcon(":/icons/go-next-run.png");
-    g_successIcon = QIcon(":/icons/go-next-success.png");
-    g_notRunIcon = QIcon(":/icons/go-next2.png");
-    g_failIcon = QIcon(":/icons/go-next-bug.png");
-    g_leafRunningIcon = QIcon(":/icons/system-running-small.png");
+    g_aggregateRunnningIcon = KIcon("dialog-ok-apply");
+    g_successIcon = KIcon("dialog-ok-apply");
+    g_notRunIcon = KIcon("dialog-ok");
+    g_failIcon = KIcon("dialog-error");
+    g_leafRunningIcon = KIcon("go-next");
 }
 
 RunnerModel::~RunnerModel()
@@ -107,9 +107,7 @@ QVariant RunnerModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole :
         return testFromIndex(index)->name();
     case Qt::CheckStateRole :
-        t = testFromIndex(index);
-	if(t->shouldRun())
-		return t->internal()->checkState();
+        return testFromIndex(index)->internal()->checkState();
     case Qt::DecorationRole :
         if (index.child(0, 0).isValid()) { // not a leaf test
             return computeIconFromChildState(testFromIndex(index));
@@ -173,7 +171,7 @@ QVariant RunnerModel::computeIconFromChildState(Veritas::Test* test) const
 
 bool RunnerModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if ( role == Qt::CheckStateRole  && testFromIndex(index)->shouldRun())
+    if ( role == Qt::CheckStateRole )
     {
         testFromIndex(index)->internal()->setCheckState((Qt::CheckState)value.toInt());
         QModelIndex parent = index;
@@ -204,10 +202,7 @@ Qt::ItemFlags RunnerModel::flags(const QModelIndex& index) const
     if (!index.isValid()) {
         return 0;
     }
-    if(testFromIndex(index)->shouldRun())
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable;
-    else
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable;
 }
 
 QModelIndex RunnerModel::index(int row, int column, const QModelIndex& parent) const
