@@ -37,15 +37,16 @@ QVariant g_failIcon;
 QVariant g_runningIcon;
 QVariant g_successIcon;
 QVariant g_notRunIcon;
+QVariant g_fatalIcon;
 }
 
 QVariant Utils::resultIcon(int result)
 {
     if (!g_init) {
-        g_failIcon = QIcon(":/icons/bug-small.png");
-        g_successIcon = QIcon(":/icons/test-success-small.png");
-        g_runningIcon = QIcon(":/icons/system-running-small.png");
-        g_notRunIcon = QIcon(":/icons/test-notrun-small.png");
+        g_failIcon = KIcon("dialog-error");
+        g_successIcon = KIcon("dialog-ok-apply");
+        g_notRunIcon = KIcon("dialog-ok");
+        g_fatalIcon = KIcon("script-error");
         g_init = true;
     }
     switch (result) {
@@ -54,8 +55,9 @@ QVariant Utils::resultIcon(int result)
         return g_successIcon;
     case Veritas::NoResult:
         return g_notRunIcon;
-    case Veritas::RunError:
     case Veritas::RunFatal:
+        return g_fatalIcon;
+    case Veritas::RunError:
     case Veritas::RunException:
         return g_failIcon;
     default:
