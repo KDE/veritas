@@ -58,7 +58,8 @@ qt4_add_resources(veritas_SRCS
     resources/qxrunner.qrc)
 
 kde4_add_library(kdevplatformveritas SHARED ${veritas_SRCS})
-set_target_properties(kdevplatformveritas PROPERTIES VERSION ${KDEVPLATFORM_LIB_VERSION} SOVERSION ${KDEVPLATFORM_LIB_SOVERSION})
+
+set_target_properties(kdevplatformveritas PROPERTIES VERSION 4.0.0 SOVERSION 4)
 target_link_libraries(kdevplatformveritas
     ${KDEVPLATFORM_INTERFACES_LIBRARIES}
     ${KDEVPLATFORM_TESTS_LIBRARIES}
