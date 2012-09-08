@@ -47,11 +47,11 @@ void SelectionStoreTest::rootOnly()
 {
     m_root->internal()->setCheckState(Qt::Checked);
     m_store->saveState(m_root);
-    KVERIFY(!m_store->wasDeselected(m_root));
+    KVERIFY(!m_store->wasDeselectedLeaf(m_root));
 
     m_root->internal()->setCheckState(Qt::Unchecked);
     m_store->saveState(m_root);
-    KVERIFY(m_store->wasDeselected(m_root));
+    KVERIFY(m_store->wasDeselectedLeaf(m_root));
 }
 
 void SelectionStoreTest::newObject()
@@ -60,7 +60,7 @@ void SelectionStoreTest::newObject()
     m_store->saveState(m_root);
 
     Test* root2 = new Test("root", 0);
-    KVERIFY(m_store->wasDeselected(root2));
+    KVERIFY(m_store->wasDeselectedLeaf(root2));
 
     delete root2;
 }
@@ -79,9 +79,9 @@ void SelectionStoreTest::saveMultiple()
     m_store->saveState(test2);
     m_store->saveState(test3);
 
-    KVERIFY(m_store->wasDeselected(test1));
-    KVERIFY(!m_store->wasDeselected(test2));
-    KVERIFY(m_store->wasDeselected(test3));
+    KVERIFY(m_store->wasDeselectedLeaf(test1));
+    KVERIFY(!m_store->wasDeselectedLeaf(test2));
+    KVERIFY(m_store->wasDeselectedLeaf(test3));
 
     delete test1;
     delete test2;
@@ -99,8 +99,8 @@ void SelectionStoreTest::testTree()
     m_store->saveState(child1);
     m_store->saveState(child2);
 
-    KVERIFY(!m_store->wasDeselected(child1));
-    KVERIFY(m_store->wasDeselected(child2));
+    KVERIFY(!m_store->wasDeselectedLeaf(child1));
+    KVERIFY(m_store->wasDeselectedLeaf(child2));
 }
 
 void SelectionStoreTest::testTreeWithIdenticalNames()
@@ -115,8 +115,8 @@ void SelectionStoreTest::testTreeWithIdenticalNames()
     m_store->saveState(child1);
     m_store->saveState(child2);
 
-    KVERIFY(!m_store->wasDeselected(child1));
-    KVERIFY(m_store->wasDeselected(child2));
+    KVERIFY(!m_store->wasDeselectedLeaf(child1));
+    KVERIFY(m_store->wasDeselectedLeaf(child2));
 
     delete root2;
 }
@@ -148,10 +148,10 @@ void SelectionStoreTest::saveRecursive()
     child2 = new Test("test3", m_root);
     child21 = new Test("test21", child2);
 
-    KVERIFY(!m_store->wasDeselected(m_root));
-    KVERIFY(!m_store->wasDeselected(child1));
-    KVERIFY(!m_store->wasDeselected(child2));
-    KVERIFY(m_store->wasDeselected(child21));
+    KVERIFY(!m_store->wasDeselectedLeaf(m_root));
+    KVERIFY(!m_store->wasDeselectedLeaf(child1));
+    KVERIFY(!m_store->wasDeselectedLeaf(child2));
+    KVERIFY(m_store->wasDeselectedLeaf(child21));
 }
 
 

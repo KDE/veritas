@@ -36,14 +36,14 @@ public:
     void saveState(Test* test);
     void saveTree(Test* root);
 
-    bool wasDeselected(Test* test);
+    bool wasDeselectedLeaf(Test* test);
     void restoreTree(Test* root);
 
 private:
     QString serialize(Test*) const;
 
 private:
-    QSet<QString> m_deselected; // serialized name of deselected tests
+    QSet<QString> m_deselectedLeaves; // serialized name of deselected leaf tests
 };
 
 }

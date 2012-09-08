@@ -46,7 +46,7 @@ public:
     RestoreTest(SelectionStore* store) : m_store(store) {}
     void operator()(Test* t) {
         Q_ASSERT(m_store);
-        if (m_store->wasDeselected(t)) {
+        if (m_store->wasDeselectedLeaf(t)) {
             t->internal()->setCheckState(Qt::Unchecked);
         }
     }
@@ -64,7 +64,7 @@ void SelectionStore::saveState(Test* test)
       return;
     }
     if (test->internal()->checkState() == Qt::Unchecked) {
-        m_deselected << serialize(test);
+        m_deselectedLeaves << serialize(test);
     }
 }
 
@@ -80,10 +80,10 @@ QString SelectionStore::serialize(Test* test) const
     return serialized;
 }
 
-bool SelectionStore::wasDeselected(Test* test)
+bool SelectionStore::wasDeselectedLeaf(Test* test)
 {
     Q_ASSERT(test);
-    return m_deselected.contains(serialize(test));
+    return m_deselectedLeaves.contains(serialize(test));
 }
 
 void SelectionStore::saveTree(Test* root)
