@@ -87,9 +87,9 @@ void RunnerModelTest::changeItems()
 void RunnerModelTest::flags()
 {
     model->fill1();
-    KOMPARE((Qt::ItemIsEnabled | Qt::ItemIsSelectable), model->flags(model->index(0, 0)));
-    KOMPARE((Qt::ItemIsEnabled | Qt::ItemIsSelectable), model->flags(model->index(0, 1)));
-    KOMPARE((Qt::ItemIsEnabled | Qt::ItemIsSelectable), model->flags(model->index(0, 2)));
+    KOMPARE((Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable), model->flags(model->index(0, 0)));
+    KOMPARE((Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable), model->flags(model->index(0, 1)));
+    KOMPARE((Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable), model->flags(model->index(0, 2)));
 }
 
 namespace
