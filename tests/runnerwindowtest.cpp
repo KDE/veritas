@@ -109,7 +109,7 @@ void RunnerWindowTest::selectAll()
 // helper
 bool RunnerWindowTest::isNotSelected(TestStub* item)
 {
-    return !item->internal()->checkState() == Qt::Checked;
+    return item->internal()->checkState() == Qt::Unchecked;
 }
 
 // command
