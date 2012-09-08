@@ -311,10 +311,10 @@ TestStub* TestExecutorTest::createDeselectedTest(const QString& name, Test* pare
 void TestExecutorTest::noneSelected()
 {
     // root
-    //   child1 [should run] - deselcted
-    //      child11
+    //   child1 [should run] - deselected
+    //      child11 - deselected
     //   child2 [should run] - deselected
-    //      child21
+    //      child21 [should run] - deselected
 
     // setup
     TestStub *child1, *child11, *child2, *child21;
@@ -323,6 +323,9 @@ void TestExecutorTest::noneSelected()
     root    = createTest("root", 0, rs);
     child1  = createDeselectedTest("child1", root, c1s);
     child11 = createTest("child11", child1, c11s);
+    //createTest creates a checked test, so the checked state is propagated to
+    //its parent, even if the parent was previously unchecked.
+    child11->internal()->setCheckState(Qt::Unchecked);
     child2  = createDeselectedTest("child2", root, c2s);
     child21 = createDeselectedTest("chld21", child2, c21s);
 
