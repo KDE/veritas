@@ -150,7 +150,7 @@ void SelectionStoreTest::saveRecursive()
 
     KVERIFY(!m_store->wasDeselected(m_root));
     KVERIFY(!m_store->wasDeselected(child1));
-    KVERIFY(m_store->wasDeselected(child2));
+    KVERIFY(!m_store->wasDeselected(child2));
     KVERIFY(m_store->wasDeselected(child21));
 }
 
@@ -189,10 +189,10 @@ void SelectionStoreTest::restoreRecursive()
 
     m_store->restoreTree(m_root);
 
-    KVERIFY(m_root->internal()->checkState()==Qt::Checked);
+    KVERIFY(m_root->internal()->checkState()==Qt::PartiallyChecked);
     KVERIFY(child1->internal()->checkState()==Qt::Checked);
-    KVERIFY(!child2->internal()->checkState()==Qt::Checked);
-    KVERIFY(!child21->internal()->checkState()==Qt::Checked);
+    KVERIFY(child2->internal()->checkState()==Qt::PartiallyChecked);
+    KVERIFY(child21->internal()->checkState()==Qt::Unchecked);
     KVERIFY(child22->internal()->checkState()==Qt::Checked); // newly added test, so checked
     KVERIFY(child3->internal()->checkState()==Qt::Checked);
 }
@@ -224,7 +224,9 @@ void SelectionStoreTest::selectedChildDeselectedParent()
      *   - child    selected
      *
      * First serialize the selection state of this test-tree
-     * then restore it. Parent should be deselected & child selected.
+     * then restore it. Both parent and child should be selected, as the parent
+     * has only one selected child, and the checked state of the child is
+     * propagated to the parent.
      */
     Test* parent = new Test("parent", m_root);
     m_root->addChild(parent);
@@ -246,7 +248,7 @@ void SelectionStoreTest::selectedChildDeselectedParent()
 
     m_store->restoreTree(m_root);
 
-    KVERIFY(!parent->internal()->checkState()==Qt::Checked);
+    KVERIFY(parent->internal()->checkState()==Qt::Checked);
     KVERIFY(child->internal()->checkState()==Qt::Checked);
 }
 
