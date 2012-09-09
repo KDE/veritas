@@ -428,7 +428,6 @@ void RunnerWindow::displayProgress(int numItems) const
     // Display only when there are selected items
     if (progressBar()->maximum() > 0) {
         progressBar()->setValue(numItems);
-        m_ui->labelRunText->setText(i18n("Running test %1 of %2", numItems, m_numItemsSelected));
     }
 }
 
