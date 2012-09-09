@@ -53,6 +53,7 @@ private slots:
     void progressBarMaxedOutAfterRun();
     void infoResultShown();
     void testRanCaption();
+    void testRanCaptionWithSingleTest();
 
 private:
     void expandSome();

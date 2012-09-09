@@ -345,4 +345,21 @@ void RunnerWindowTest::testRanCaption()
     KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
 }
 
+void RunnerWindowTest::testRanCaptionWithSingleTest()
+{
+    m_ui->actionUnselectAll->trigger();
+    model->child12->internal()->setCheckState(Qt::Checked);
+    //As Internal is modified directly, call countItems in the model to update
+    //the count of selected items.
+    model->countItems();
+
+    QRegExp r("Selected 1 test of [0-9]+");
+    KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
+
+    m_ui->actionStart->trigger();
+
+    r.setPattern("All tests completed in [0-9]*.[0-9]* seconds");
+    KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
+}
+
 QTEST_KDEMAIN(RunnerWindowTest, GUI)
