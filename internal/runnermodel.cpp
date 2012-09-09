@@ -74,11 +74,11 @@ RunnerModel::RunnerModel(QObject* parent)
     setExpectedResults(Veritas::AllStates);
     //ModelTest* tm = new ModelTest(this);
 
-    g_aggregateRunnningIcon = KIcon("dialog-ok-apply");
-    g_successIcon = KIcon("dialog-ok-apply");
-    g_notRunIcon = KIcon("dialog-ok");
-    g_failIcon = KIcon("dialog-error");
-    g_leafRunningIcon = KIcon("go-next");
+    g_aggregateRunnningIcon = QIcon(":/icons/go-next-run.png");
+    g_successIcon = QIcon(":/icons/go-next-success.png");
+    g_notRunIcon = QIcon(":/icons/go-next2.png");
+    g_failIcon = QIcon(":/icons/go-next-bug.png");
+    g_leafRunningIcon = QIcon(":/icons/system-running-small.png");
 }
 
 RunnerModel::~RunnerModel()
