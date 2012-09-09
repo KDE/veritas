@@ -350,16 +350,13 @@ void RunnerWindow::initProxyModels(RunnerModel* model)
     RunnerProxyModel* proxy = new RunnerProxyModel(model);
     proxy->setSourceModel(model);
     runnerView()->setModel(proxy);
-    m_allTestsStopWatch = QTime();
-    m_testStopWatch = QTime();
+    m_stopWatch = QTime();
 }
 
 // helper for setModel(RunnerModel*)
 void RunnerWindow::connectItemStatistics(RunnerModel* model)
 {
     // Item statistics.
-    connect(model, SIGNAL(itemStarted(QModelIndex)),
-            SLOT(resetTestTime()));
     connect(model, SIGNAL(numTotalChanged(int)),
             SLOT(updateNumTotal(int)));
     connect(model, SIGNAL(numSelectedChanged(int)),
@@ -417,12 +414,6 @@ void RunnerWindow::setModel(RunnerModel* model)
     runnerView()->resizeColumnToContents(0);
 }
 
-void RunnerWindow::resetTestTime()
-{
-    m_testStopWatch.restart();
-}
-
-
 void RunnerWindow::displayProgress(int numItems) const
 {
     // Display only when there are selected items
@@ -438,8 +429,8 @@ void RunnerWindow::displayCompleted() const
     enableControlsAfterRunning();
 
     QString elapsed = "0.000";
-    if (m_allTestsStopWatch.isValid()) {
-        int mili = m_allTestsStopWatch.elapsed();
+    if (m_stopWatch.isValid()) {
+        int mili = m_stopWatch.elapsed();
         elapsed = QString("%1.%2").arg(int(mili/1000)).arg(mili%1000);
     }
 
@@ -481,12 +472,7 @@ void RunnerWindow::updateNumSelected(int numItems)
 void RunnerWindow::displayNumCompleted(int numItems)
 {
     m_numItemsCompleted = numItems;
-    QString elapsed = "0.000";
-    if (m_testStopWatch.isValid()) {
-        int mili = m_testStopWatch.elapsed();
-        elapsed = QString("%1.%2").arg(int(mili/1000)).arg(mili%1000);
-    }
-    ui()->labelRunText->setText( i18nc("%2 is a real number like 1.355", "Completed test %1 in %2 seconds", m_numItemsCompleted, elapsed) );
+    updateRunText();
 }
 
 void RunnerWindow::displayNumErrors(int numItems) const
@@ -569,6 +555,16 @@ void RunnerWindow::syncTestWithResult(const QItemSelection& selected,
     enableTestSync(true);      // Enable selection handler again.
 }
 
+void RunnerWindow::updateRunText() const
+{
+    QString elapsed = "0.000";
+    if (m_stopWatch.isValid()) {
+        int mili = m_stopWatch.elapsed();
+        elapsed = QString("%1.%2").arg(int(mili/1000)).arg(mili%1000);
+    }
+    ui()->labelRunText->setText( i18ncp("%2 is a real number like 1.355", "Ran 1 test in %2 seconds", "Ran %1 tests in %2 seconds", m_numItemsCompleted, elapsed) );
+}
+
 void RunnerWindow::updateSelectedText() const
 {
      if(m_numTotalItems)
@@ -619,12 +615,10 @@ void RunnerWindow::runItems()
     }
     m_isRunning = true;
 
-    m_allTestsStopWatch = QTime();
-    m_testStopWatch = QTime();
+    m_stopWatch = QTime();
     progressBar()->turnGreen();
     displayNumCompleted(0);
-    m_allTestsStopWatch.start();
-    m_testStopWatch.start();
+    m_stopWatch.start();
 
     disableControlsBeforeRunning();
     resultsModel()->clear();

@@ -128,7 +128,6 @@ private Q_SLOTS:
     void displayNumErrors(int numItems) const;
     void displayNumFatals(int numItems) const;
     void displayNumExceptions(int numItems) const;
-    void resetTestTime();
 
     /*! Filter all results which belong to the selected in the
      * results view. */
@@ -215,6 +214,7 @@ private: // Operations
     // Copy and assignment not supported.
     RunnerWindow(const RunnerWindow&);
     RunnerWindow& operator=(const RunnerWindow&);
+    void updateRunText() const;
     void updateSelectedText() const;
 
     TestBar* progressBar() const;
@@ -225,8 +225,7 @@ private:
     OverlayManager* m_verbose;
     ProjectSelection* m_projectSelection;     // a dropdown box to select the 'current' project
     QMap<QString, QAction*> m_project2action;
-    QTime m_allTestsStopWatch;              // times for all tests
-    QTime m_testStopWatch;                 // times for a single test
+    QTime m_stopWatch;                 // times test-runs, shown in the gui
     TestExecutor* m_executor;
     mutable bool m_isRunning;
     VerboseToggle* m_verboseToggle;
