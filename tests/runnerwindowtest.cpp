@@ -336,9 +336,12 @@ void RunnerWindowTest::infoResultShown()
 
 void RunnerWindowTest::testRanCaption()
 {
-    KOMPARE("", m_ui->labelRunText->text());
+    QRegExp r("Selected [0-9]+ tests of [0-9]+");
+    KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
+
     runAllTests();
-    QRegExp r("Ran [0-9] tests in [0-9]*.[0-9]* seconds");
+
+    r.setPattern("All tests completed in [0-9]*.[0-9]* seconds");
     KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
 }
 
