@@ -54,6 +54,8 @@ private slots:
     void infoResultShown();
     void testRanCaption();
     void testRanCaptionWithSingleTest();
+    void testRanCaptionStopped();
+    void testRanCaptionStoppedWithSingleTest();
 
 private:
     void expandSome();

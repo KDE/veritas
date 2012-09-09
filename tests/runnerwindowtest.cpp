@@ -341,7 +341,7 @@ void RunnerWindowTest::testRanCaption()
 
     runAllTests();
 
-    r.setPattern("All tests completed in [0-9]*.[0-9]* seconds");
+    r.setPattern("Finished. Ran [0-9]+ tests in [0-9]*.[0-9]* seconds");
     KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
 }
 
@@ -358,7 +358,29 @@ void RunnerWindowTest::testRanCaptionWithSingleTest()
 
     m_ui->actionStart->trigger();
 
-    r.setPattern("All tests completed in [0-9]*.[0-9]* seconds");
+    r.setPattern("Finished. Ran 1 test in [0-9]*.[0-9]* seconds");
+    KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
+}
+
+void RunnerWindowTest::testRanCaptionStopped()
+{
+    connect(model->child12, SIGNAL(finished(QModelIndex)),
+            m_ui->actionStop, SLOT(trigger()));
+
+    runAllTests();
+
+    QRegExp r("Stopped. Ran [0-9]+ tests in [0-9]*.[0-9]* seconds");
+    KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
+}
+
+void RunnerWindowTest::testRanCaptionStoppedWithSingleTest()
+{
+    connect(model->child11, SIGNAL(finished(QModelIndex)),
+            m_ui->actionStop, SLOT(trigger()));
+
+    m_ui->actionStart->trigger();
+
+    QRegExp r("Stopped. Ran 1 test in [0-9]*.[0-9]* seconds");
     KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
 }
 

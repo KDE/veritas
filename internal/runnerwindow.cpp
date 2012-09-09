@@ -428,16 +428,11 @@ void RunnerWindow::displayCompleted() const
     progressBar()->setValue(progressBar()->maximum());
     enableControlsAfterRunning();
 
-    QString elapsed = "0.000";
-    if (m_stopWatch.isValid()) {
-        int mili = m_stopWatch.elapsed();
-        elapsed = QString("%1.%2").arg(int(mili/1000)).arg(mili%1000);
-    }
-
+    updateRunText();
     if(m_numItemsCompleted == m_numItemsSelected)
-        ui()->labelRunText->setText( i18nc("%2 is a real number like 1.355", "All tests completed in %1 seconds", elapsed) );
+        ui()->labelRunText->setText( i18nc("%1 is a sentence like 'Ran 5 tests in 1.355 seconds'", "Finished. %1", m_ui->labelRunText->text()) );
     else
-        ui()->labelRunText->setText( i18nc("%3 is a real number like 1.355", "Stopped. Completed %1 tests of %2 in %3 seconds", m_numItemsCompleted, m_numItemsSelected, elapsed) );
+        ui()->labelRunText->setText( i18nc("%1 is a sentence like 'Ran 5 tests in 1.355 seconds'", "Stopped. %1", m_ui->labelRunText->text()) );
 
     m_isRunning = false;
     emit runCompleted();
