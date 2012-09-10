@@ -45,6 +45,7 @@ private slots:
     void startItems();
     void selectAll();
     void unselectAll();
+    void selectAndDeselect();
     void expandAll();
     void collapseAll();
     void deselectItems();

@@ -99,11 +99,13 @@ void RunnerWindowTest::selectSome()
 void RunnerWindowTest::selectAll()
 {
     selectSome();
-    model->countItems();
-    QTest::qWait(100);
     m_ui->actionSelectAll->trigger();
     QTest::qWait(100);
     checkAllItems(&RunnerWindowTest::isSelected);
+
+    KVERIFY(m_ui->actionStart->isEnabled());
+    KVERIFY(!m_ui->actionSelectAll->isEnabled());
+    KVERIFY(m_ui->actionUnselectAll->isEnabled());
 }
 
 // helper
@@ -119,6 +121,51 @@ void RunnerWindowTest::unselectAll()
     m_ui->actionUnselectAll->trigger();
     QTest::qWait(100);
     checkAllItems(&RunnerWindowTest::isNotSelected);
+
+    KVERIFY(!m_ui->actionStart->isEnabled());
+    KVERIFY(m_ui->actionSelectAll->isEnabled());
+    KVERIFY(!m_ui->actionUnselectAll->isEnabled());
+}
+
+// command
+void RunnerWindowTest::selectAndDeselect()
+{
+    //In this test the items are selected "manually", instead of using the
+    //"Select all" and "Unselect all" actions
+    selectSome();
+    //As Internal is modified directly, call countItems in the model to update
+    //the count of selected items.
+    model->countItems();
+
+    KVERIFY(m_ui->actionStart->isEnabled());
+    KVERIFY(m_ui->actionSelectAll->isEnabled());
+    KVERIFY(m_ui->actionUnselectAll->isEnabled());
+
+    //Select all
+    model->child12->internal()->setCheckState(Qt::Checked);
+    model->countItems();
+
+    KVERIFY(m_ui->actionStart->isEnabled());
+    KVERIFY(!m_ui->actionSelectAll->isEnabled());
+    KVERIFY(m_ui->actionUnselectAll->isEnabled());
+
+    //Unselect all
+    model->child11->internal()->setCheckState(Qt::Unchecked);
+    model->child12->internal()->setCheckState(Qt::Unchecked);
+    model->child21->internal()->setCheckState(Qt::Unchecked);
+    model->countItems();
+
+    KVERIFY(!m_ui->actionStart->isEnabled());
+    KVERIFY(m_ui->actionSelectAll->isEnabled());
+    KVERIFY(!m_ui->actionUnselectAll->isEnabled());
+
+    //Select one item
+    model->child21->internal()->setCheckState(Qt::Checked);
+    model->countItems();
+
+    KVERIFY(m_ui->actionStart->isEnabled());
+    KVERIFY(m_ui->actionSelectAll->isEnabled());
+    KVERIFY(m_ui->actionUnselectAll->isEnabled());
 }
 
 // helper
