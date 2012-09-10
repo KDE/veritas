@@ -137,7 +137,11 @@ void RunnerModelTest::runItems()
     setUpResultSpies(spies);
     fillModel(model);
 
+    KOMPARE(0, model->numCompleted());
+
     executeItems(model);
+
+    KOMPARE(1, model->numCompleted());
 
     assertSignalValue(spies.take("startedC"), 1);
     assertSignalValue(spies.take("successC"), 1);
@@ -204,8 +208,14 @@ void RunnerModelTest::countItems()
     spies["selectedC"] = new QSignalSpy(model, SIGNAL(numSelectedChanged(int)));
     setUpResultSpies(spies);
 
+    KOMPARE(0, model->numTotal());
+    KOMPARE(0, model->numSelected());
+
     model->fill1();
     model->countItems();
+
+    KOMPARE(2, model->numTotal());
+    KOMPARE(2, model->numSelected());
 
     // all should be emitted just once
     foreach(QSignalSpy* spy, spies) {

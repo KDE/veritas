@@ -61,8 +61,10 @@ QVariant g_aggregateRunnningIcon;
 RunnerModel::RunnerModel(QObject* parent)
         : QAbstractItemModel(parent)
 {
+    m_numTotal = 0;
     m_numSelected = 0;
     m_numStarted = 0;
+    m_numCompleted = 0;
     m_numSuccess = 0;
     m_numInfos = 0;
     m_numWarnings = 0;
@@ -260,8 +262,7 @@ int RunnerModel::columnCount(const QModelIndex& parent) const
 
 void RunnerModel::countItems()
 {
-    int numTotal = 0;
-
+    m_numTotal = 0;
     m_numSelected = 0;
     m_numSuccess = 0;
     m_numInfos = 0;
@@ -278,7 +279,7 @@ void RunnerModel::countItems()
             continue;
         }
         Test* item = testFromIndex(currentIndex);    // Have an item.
-        numTotal++;
+        m_numTotal++;
         if (item->internal()->checkState() == Qt::Checked && !hasChildren(currentIndex)) {
             m_numSelected++;
         }
@@ -322,7 +323,7 @@ void RunnerModel::countItems()
     emit numErrorsChanged(m_numErrors);
     emit numFatalsChanged(m_numFatals);
     emit numExceptionsChanged(m_numExceptions);
-    emit numTotalChanged(numTotal);
+    emit numTotalChanged(m_numTotal);
 }
 
 int RunnerModel::expectedResults() const
@@ -335,6 +336,7 @@ void RunnerModel::initCounters()
 {
     // Initialize counters.
     m_numStarted = 0;
+    m_numCompleted = 0;
     m_numSuccess = 0;
     m_numInfos = 0;
     m_numWarnings = 0;
@@ -343,7 +345,7 @@ void RunnerModel::initCounters()
     m_numExceptions = 0;
 
     emit numStartedChanged(m_numStarted);
-    emit numCompletedChanged(m_numStarted);
+    emit numCompletedChanged(m_numCompleted);
     emit numSuccessChanged(m_numSuccess);
     emit numInfosChanged(m_numInfos);
     emit numWarningsChanged(m_numWarnings);
@@ -351,6 +353,21 @@ void RunnerModel::initCounters()
     emit numFatalsChanged(m_numFatals);
     emit numExceptionsChanged(m_numExceptions);
 
+}
+
+int RunnerModel::numTotal() const
+{
+    return m_numTotal;
+}
+
+int RunnerModel::numSelected() const
+{
+    return m_numSelected;
+}
+
+int RunnerModel::numCompleted() const
+{
+    return m_numCompleted;
 }
 
 Test* RunnerModel::rootItem() const
@@ -433,7 +450,9 @@ void RunnerModel::postItemCompleted(QModelIndex index)
     default : {}
     }
 
-    emit numCompletedChanged(m_numStarted);
+    m_numCompleted = m_numStarted;
+
+    emit numCompletedChanged(m_numCompleted);
     emit itemCompleted(index);
     emit dataChanged(index, index);
     index = index.parent();

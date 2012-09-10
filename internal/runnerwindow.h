@@ -232,9 +232,6 @@ private:
     ToSourceToggle* m_toSourceToggle;
     OverlayManager* m_toSource;
     KDevelop::IProject* m_currentProject;
-    int m_numItemsCompleted;
-    int m_numTotalItems;
-    int m_numItemsSelected;
 };
 
 class TestBar : public QProgressBar

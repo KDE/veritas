@@ -429,7 +429,7 @@ void RunnerWindow::displayCompleted() const
     enableControlsAfterRunning();
 
     updateRunText();
-    if(m_numItemsCompleted == m_numItemsSelected)
+    if (runnerModel()->numCompleted() == runnerModel()->numSelected())
         ui()->labelRunText->setText( i18nc("%1 is a sentence like 'Ran 5 tests in 1.355 seconds'", "Finished. %1", m_ui->labelRunText->text()) );
     else
         ui()->labelRunText->setText( i18nc("%1 is a sentence like 'Ran 5 tests in 1.355 seconds'", "Stopped. %1", m_ui->labelRunText->text()) );
@@ -440,19 +440,18 @@ void RunnerWindow::displayCompleted() const
 
 void RunnerWindow::updateNumTotal(int numItems)
 {
-    m_numTotalItems = numItems;
+    Q_UNUSED(numItems);
+
     updateSelectedText();
 }
 
 void RunnerWindow::updateNumSelected(int numItems)
 {
-    m_numItemsSelected = numItems++;
-
-    if(!m_numItemsSelected) {
+    if (!numItems) {
         m_ui->actionUnselectAll->setDisabled(true);
         m_ui->actionStart->setDisabled(true);
         m_ui->actionSelectAll->setDisabled(false);
-    } else if(m_numItemsSelected == m_numTotalItems) {
+    } else if (numItems == runnerModel()->numTotal()) {
         m_ui->actionUnselectAll->setDisabled(false);
         m_ui->actionStart->setDisabled(false);
         m_ui->actionSelectAll->setDisabled(true);
@@ -466,7 +465,8 @@ void RunnerWindow::updateNumSelected(int numItems)
 
 void RunnerWindow::displayNumCompleted(int numItems)
 {
-    m_numItemsCompleted = numItems;
+    Q_UNUSED(numItems);
+
     updateRunText();
 }
 
@@ -557,13 +557,13 @@ void RunnerWindow::updateRunText() const
         int mili = m_stopWatch.elapsed();
         elapsed = QString("%1.%2").arg(int(mili/1000)).arg(mili%1000);
     }
-    ui()->labelRunText->setText( i18ncp("%2 is a real number like 1.355", "Ran 1 test in %2 seconds", "Ran %1 tests in %2 seconds", m_numItemsCompleted, elapsed) );
+    ui()->labelRunText->setText( i18ncp("%2 is a real number like 1.355", "Ran 1 test in %2 seconds", "Ran %1 tests in %2 seconds", runnerModel()->numCompleted(), elapsed) );
 }
 
 void RunnerWindow::updateSelectedText() const
 {
-     if(m_numTotalItems)
-        ui()->labelRunText->setText( i18np("Selected 1 test of %2", "Selected %1 tests of %2", m_numItemsSelected, m_numTotalItems) );
+    if (runnerModel()->numTotal())
+        ui()->labelRunText->setText( i18np("Selected 1 test of %2", "Selected %1 tests of %2", runnerModel()->numSelected(), runnerModel()->numTotal()) );
 }
 
 void RunnerWindow::scrollToHighlightedRows() const

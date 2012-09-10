@@ -133,6 +133,15 @@ public:
     /*! helper for runItems() */
     void initCounters();
 
+    /*! Returns the number of runner items. */
+    int numTotal() const;
+
+    /*! Returns the number of selected runner items. */
+    int numSelected() const;
+
+    /*! Returns the number of completed runner items. */
+    int numCompleted() const;
+
 Q_SIGNALS:
     /*! Emitted when the runner item referred to by
      *  \a index is started. */
@@ -208,8 +217,10 @@ private:  // Attributes
     Test* m_rootItem;
     int m_expectedResults;
 
+    int m_numTotal;
     int m_numSelected;
     int m_numStarted;
+    int m_numCompleted;
     int m_numSuccess;
     int m_numInfos;
     int m_numWarnings;
