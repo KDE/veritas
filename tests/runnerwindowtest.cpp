@@ -336,12 +336,11 @@ void RunnerWindowTest::infoResultShown()
 
 void RunnerWindowTest::testRanCaption()
 {
-    QRegExp r("Selected [0-9]+ tests of [0-9]+");
-    KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
+    KOMPARE("Selected 3 tests of 3", m_ui->labelRunText->text());
 
     runAllTests();
 
-    r.setPattern("Finished. Ran [0-9]+ tests in [0-9]*.[0-9]* seconds");
+    QRegExp r("Finished. Ran 3 tests in [0-9]*.[0-9]* seconds");
     KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
 }
 
@@ -353,12 +352,11 @@ void RunnerWindowTest::testRanCaptionWithSingleTest()
     //the count of selected items.
     model->countItems();
 
-    QRegExp r("Selected 1 test of [0-9]+");
-    KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
+    KOMPARE("Selected 1 test of 3", m_ui->labelRunText->text());
 
     m_ui->actionStart->trigger();
 
-    r.setPattern("Finished. Ran 1 test in [0-9]*.[0-9]* seconds");
+    QRegExp r("Finished. Ran 1 test in [0-9]*.[0-9]* seconds");
     KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
 }
 
@@ -369,7 +367,7 @@ void RunnerWindowTest::testRanCaptionStopped()
 
     runAllTests();
 
-    QRegExp r("Stopped. Ran [0-9]+ tests in [0-9]*.[0-9]* seconds");
+    QRegExp r("Stopped. Ran 2 tests in [0-9]*.[0-9]* seconds");
     KVERIFY_MSG(r.exactMatch(m_ui->labelRunText->text()), m_ui->labelRunText->text());
 }
 
