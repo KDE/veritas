@@ -562,8 +562,7 @@ void RunnerWindow::updateRunText() const
 
 void RunnerWindow::updateSelectedText() const
 {
-    if (runnerModel()->numTotal())
-        ui()->labelRunText->setText( i18np("Selected 1 test of %2", "Selected %1 tests of %2", runnerModel()->numSelected(), runnerModel()->numTotal()) );
+    ui()->labelRunText->setText( i18np("Selected 1 test of %2", "Selected %1 tests of %2", runnerModel()->numSelected(), runnerModel()->numTotal()) );
 }
 
 void RunnerWindow::scrollToHighlightedRows() const
