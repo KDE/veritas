@@ -409,7 +409,7 @@ void RunnerWindowTest::testRanCaptionWithSingleTest()
 
 void RunnerWindowTest::testRanCaptionStopped()
 {
-    connect(model->child12, SIGNAL(finished(QModelIndex)),
+    connect(model->child12, SIGNAL(started(QModelIndex)),
             m_ui->actionStop, SLOT(trigger()));
 
     runAllTests();
@@ -420,7 +420,7 @@ void RunnerWindowTest::testRanCaptionStopped()
 
 void RunnerWindowTest::testRanCaptionStoppedWithSingleTest()
 {
-    connect(model->child11, SIGNAL(finished(QModelIndex)),
+    connect(model->child11, SIGNAL(started(QModelIndex)),
             m_ui->actionStop, SLOT(trigger()));
 
     m_ui->actionStart->trigger();

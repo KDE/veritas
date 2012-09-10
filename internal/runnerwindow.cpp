@@ -468,6 +468,17 @@ void RunnerWindow::displayNumCompleted(int numItems)
     Q_UNUSED(numItems);
 
     updateRunText();
+
+    if (!m_isRunning) {
+        //displayNumCompleted may be called after the runner finished if the
+        //runner was soft stopped while a test was running (that is, the test is
+        //not killed, but the next one is not started instead, so the completed
+        //signal for the test would be emitted after the runner finished). In
+        //this case, the "Stopped" message would have already been shown when
+        //stop was called, so it has to be updated with the final number of
+        //completed tests.
+        ui()->labelRunText->setText( i18nc("%1 is a sentence like 'Ran 5 tests in 1.355 seconds'", "Stopped. %1", m_ui->labelRunText->text()) );
+    }
 }
 
 void RunnerWindow::displayNumErrors(int numItems) const
