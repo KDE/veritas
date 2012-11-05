@@ -259,9 +259,9 @@ void RunnerWindow::connectFocusStuff()
 {
     // To keep the views synchronized when there are highlighted rows
     // which get clicked again..
-    connect(runnerView(),  SIGNAL(pressed(const QModelIndex&)),
+    connect(runnerView(),  SIGNAL(pressed(QModelIndex)),
             SLOT(scrollToHighlightedRows()));
-    connect(resultsView(), SIGNAL(pressed(const QModelIndex&)),
+    connect(resultsView(), SIGNAL(pressed(QModelIndex)),
             SLOT(scrollToHighlightedRows()));
 }
 

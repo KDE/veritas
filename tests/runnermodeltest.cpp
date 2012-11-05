@@ -277,7 +277,7 @@ void RunnerModelTest::updateViewLastItem()
 {
     qRegisterMetaType<QModelIndex>("QModelIndex");
     model->fill2();
-    QSignalSpy* s = new QSignalSpy(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)));
+    QSignalSpy* s = new QSignalSpy(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
     QModelIndex secondTopIndex = model->index(1,0);
     model->updateView(secondTopIndex); // this should emit datachanged item2->child21
 
