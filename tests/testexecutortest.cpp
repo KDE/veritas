@@ -119,7 +119,7 @@ void TestExecutorTest::assertRunTwice(QSignalSpy* s, Test* t)
     // have been emitted. Hench spy->count() == 1
     KOMPARE_MSG(2, s->count(),
         t->name() + " should have been run twice. (was : " +
-        QString::number(s->count()) + ")");
+        QString::number(s->count()) + ')');
 }
 
 void TestExecutorTest::assertNotRun(QSignalSpy* s, Test* t)

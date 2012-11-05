@@ -125,7 +125,7 @@ void RunnerTestHelper::setTimeout(int timeout)
 void RunnerTestHelper::verifyTestTree(QStringList runnerItems)
 {
     foreach(const QString &s, runnerItems) {
-        QStringList spl = s.split(" ");
+        QStringList spl = s.split(' ');
         int lvl0 = spl[0].toInt();
         int lvl1 = (spl.size() > 2) ? spl[1].toInt() : -1;
         int lvl2 = (spl.size() > 3) ? spl[2].toInt() : -1;
@@ -196,13 +196,13 @@ void RunnerTestHelper::verifyTestStates(QMap<QString, Veritas::TestState> expect
         Veritas::Test* suite = root->child(i);
         for (int i=0; i<suite->childCount(); i++) {
             Veritas::Test* caze = suite->child(i);
-            QString path = suite->name() + "/" + caze->name();
+            QString path = suite->name() + '/' + caze->name();
             if (expectedState.contains(path)) {
                 verifyTestState(caze, path, expectedState);
             }
             for (int i=0; i<caze->childCount(); i++) {
                 Veritas::Test* cmd = caze->child(i);
-                QString path = suite->name() + "/" + caze->name() + "/" + cmd->name();
+                QString path = suite->name() + '/' + caze->name() + '/' + cmd->name();
                 verifyTestState(cmd, path, expectedState);
             }
         }
