@@ -92,12 +92,12 @@ void CTestfileParser::readCTestfile(KUrl::List& subDirs, QList<TestExecutableInf
         if (nrofRead == -1 ) break;
         if (nrofRead == 0) break;
         QString line_(line);
-        if (line_.startsWith("SUBDIRS(")) {
+        if (line_.startsWith(QLatin1String("SUBDIRS("))) {
             KUrl subDir = processSubDirLine(line_);
             if (subDir.isValid()) {
                 subDirs << subDir;
             }
-        } else if (line_.startsWith("ADD_TEST(")) {
+        } else if (line_.startsWith(QLatin1String("ADD_TEST("))) {
             TestExecutableInfo ti = processAddTestLine(line_);
             if (!ti.name().isEmpty()) {
                 ti.setWorkingDirectory(m_dirAccess->currentDirectory());
@@ -112,7 +112,7 @@ void CTestfileParser::readCTestfile(KUrl::List& subDirs, QList<TestExecutableInf
 // helper for readCTestFile
 KUrl CTestfileParser::processSubDirLine(const QString& line)
 {
-    if (!line.endsWith(")\n")) return KUrl();
+    if (!line.endsWith(QLatin1String(")\n"))) return KUrl();
     QString dir_ = line.mid(8, line.size()-2-8);
     if (dir_.isEmpty()) return KUrl();
     KUrl dir(m_dirAccess->currentDirectory(), dir_ + '/');
