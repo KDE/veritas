@@ -158,9 +158,12 @@ RunnerWindow::RunnerWindow(ResultsModel* rmodel, ProjectSelection::IProjectFilte
     QPixmap deselect = KIconLoader::global()->loadIcon("list-remove", KIconLoader::Small);
     m_ui->actionUnselectAll->setIcon(deselect);
 
-    const char* whatsthis = "xTest runner. First select a project from the rightmost dropdown box. Next, load the test tree by clicking on the green circular arrow icon. Run your tests with a click on the leftmost green arrow icon.";
-    setWhatsThis( i18n(whatsthis) );
-    resultsView()->setWhatsThis( i18n(whatsthis) );
+    QString whatsThis = i18nc("@info:whatsthis", "<para>xTest runner.</para>\
+<para>First select a project from the rightmost dropdown box. Next, load the test \
+tree by clicking on the green circular arrow icon. Run your tests with a click on \
+the leftmost green arrow icon.</para>");
+    setWhatsThis( whatsThis );
+    resultsView()->setWhatsThis( whatsThis );
 
     runnerView()->setSelectionMode(QAbstractItemView::SingleSelection);
     runnerView()->setSelectionBehavior(QAbstractItemView::SelectRows);
