@@ -36,3 +36,14 @@ ITestFramework::~ITestFramework()
 {
     delete d;
 }
+
+QWidget* ITestFramework::createConfigWidget()
+{
+    return 0;
+}
+
+KDevelop::ProjectConfigSkeleton* ITestFramework::configSkeleton(const QVariantList& args)
+{
+    Q_UNUSED(args);
+    return 0;
+}

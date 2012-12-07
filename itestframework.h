@@ -55,10 +55,10 @@ public:
      *  Implementations should both create the widget and set the current configuration
      *  values in this widget. If null is returned, no extra config widget is present.
      *  Caller takes ownership. */
-    virtual QWidget* createConfigWidget() { return 0; }
+    virtual QWidget* createConfigWidget();
 
     /*! Framework specific configuration. */
-    virtual KDevelop::ProjectConfigSkeleton* configSkeleton(const QVariantList& args) { Q_UNUSED(args); return 0; }
+    virtual KDevelop::ProjectConfigSkeleton* configSkeleton(const QVariantList& args);
 
 private:
     ITestFrameworkPrivate* const d;
