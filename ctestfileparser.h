@@ -47,7 +47,7 @@ private:
 class VERITAS_EXPORT CTestfileParser
 {
 public:
-    CTestfileParser(FilesystemAccess*);
+    explicit CTestfileParser(FilesystemAccess*);
     virtual ~CTestfileParser();
 
     /*! Process @p dir and it's subdirectories recursively for CTestCTestfile.cmake's.

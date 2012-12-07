@@ -237,7 +237,7 @@ private:
 class TestBar : public QProgressBar
 {
 public:
-    TestBar(QWidget* parent);
+    explicit TestBar(QWidget* parent);
     virtual ~TestBar();
     void turnGreen();
     void turnRed();

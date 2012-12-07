@@ -30,7 +30,7 @@ namespace Veritas
 class VERITAS_EXPORT ResultsWidget : public QTreeView
 {
 public:
-    ResultsWidget(QWidget* parent=0);
+    explicit ResultsWidget(QWidget* parent=0);
     virtual ~ResultsWidget();
 
     /*! WARNING Since recently, Qt asserts if no model with the right 

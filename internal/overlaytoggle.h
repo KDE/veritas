@@ -37,7 +37,7 @@ class OverlayButton : public QAbstractButton
 Q_OBJECT
 
 public:
-    OverlayButton(QWidget* parent);
+    explicit OverlayButton(QWidget* parent);
     virtual ~OverlayButton();
 
     /*! Resets the selection toggle so that it is hidden and stays

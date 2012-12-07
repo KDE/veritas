@@ -39,7 +39,7 @@ class VERITAS_EXPORT OverlayManager : public QObject
 Q_OBJECT
 
 public:
-    OverlayManager(QAbstractItemView* parent);
+    explicit OverlayManager(QAbstractItemView* parent);
     virtual ~OverlayManager();
 
     /*! Initialize connections with the view

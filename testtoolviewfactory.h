@@ -36,7 +36,7 @@ class ITestFramework;
 class VERITAS_EXPORT TestToolViewFactory : public KDevelop::IToolViewFactory
 {
 public:
-    TestToolViewFactory(ITestFramework *framework);
+    explicit TestToolViewFactory(ITestFramework *framework);
     virtual ~TestToolViewFactory();
 
     // IToolViewFactory

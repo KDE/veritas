@@ -40,7 +40,7 @@ class VERITAS_EXPORT RunnerProxyModel : public QSortFilterProxyModel
 Q_OBJECT
 
 public:
-    RunnerProxyModel(QObject* parent);
+    explicit RunnerProxyModel(QObject* parent);
     ~RunnerProxyModel();
 };
 
