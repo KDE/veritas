@@ -81,7 +81,7 @@ public:
         previousRoot(0)
     {}
 
-    ~Private() {
+    virtual ~Private() {
         delete resultsModel;
     }
 
@@ -245,7 +245,7 @@ class UiToolViewFactory: public Sublime::ToolFactory
 {
 public:
     UiToolViewFactory(IToolViewFactory *factory): m_factory(factory) {}
-    ~UiToolViewFactory() { delete m_factory; }
+    virtual ~UiToolViewFactory() { delete m_factory; }
     virtual QWidget* create(Sublime::ToolDocument *doc, QWidget *parent = 0) {
         Q_UNUSED(doc);
         return m_factory->create(parent);

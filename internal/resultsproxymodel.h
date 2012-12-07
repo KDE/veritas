@@ -50,7 +50,7 @@ public: // Operations
     /*!
      * Destroys this results proxy model.
      */
-    ~ResultsProxyModel();
+    virtual ~ResultsProxyModel();
 
     /*!
      * Returns the active filter. Is a combination of OR'ed

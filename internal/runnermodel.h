@@ -66,7 +66,7 @@ public:
 
     /*! Destroys this runner model. Ongoing runner item 
      * execution is stopped. */
-    ~RunnerModel();
+    virtual ~RunnerModel();
 
     /*! Returns the data stored under the given \a role for the item
      * referred to by \a index. */

@@ -43,7 +43,7 @@ public:
         cachedMessage = QVariant();
     }
 
-    ~TestResultPrivate() {}
+    virtual ~TestResultPrivate() {}
     TestState state;
     QString message;
     int line;

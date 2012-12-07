@@ -41,7 +41,7 @@ Q_OBJECT
 
 public:
     explicit RunnerProxyModel(QObject* parent);
-    ~RunnerProxyModel();
+    virtual ~RunnerProxyModel();
 };
 
 } // namespace

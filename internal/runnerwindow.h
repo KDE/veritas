@@ -79,7 +79,7 @@ public: // Operations
     /*!\note
      * Deleting the model provided for the main window is left to
      * the owner of the model instance. */
-    ~RunnerWindow();
+    virtual ~RunnerWindow();
 
     /*! Sets the RunnerModel which holds the test-tree
      *  @note takes ownership. on succeeding calls the previous model will
