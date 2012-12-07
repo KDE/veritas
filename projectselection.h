@@ -21,7 +21,7 @@
 #ifndef VERITAS_PROJECTSELECTION_H
 #define VERITAS_PROJECTSELECTION_H
 
-#include <KSelectAction>
+#include <KDE/KSelectAction>
 
 #include "veritasexport.h"
 
