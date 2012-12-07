@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>278</width>
-    <height>175</height>
+    <height>182</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>QxRunner</string>
+   <string comment="@title">QxRunner</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../resources/qxrunner.qrc">
@@ -21,7 +21,7 @@
    <item>
     <widget class="QToolBar" name="runnerToolBar">
      <property name="windowTitle">
-      <string>Ru&amp;nner Toolbar</string>
+      <string comment="@title">Ru&amp;nner Toolbar</string>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -173,42 +173,42 @@
   </layout>
   <action name="actionStart">
    <property name="text">
-    <string>&amp;Start</string>
+    <string comment="@action:intoolbar">&amp;Start</string>
    </property>
   </action>
   <action name="actionStop">
    <property name="text">
-    <string>S&amp;top</string>
+    <string comment="@action:intoolbar">S&amp;top</string>
    </property>
   </action>
   <action name="actionSelectAll">
    <property name="text">
-    <string>Select &amp;All</string>
+    <string comment="@action:intoolbar">Select &amp;All</string>
    </property>
   </action>
   <action name="actionUnselectAll">
    <property name="text">
-    <string>&amp;Deselect All</string>
+    <string comment="@action:intoolbar">&amp;Deselect All</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>E&amp;xit</string>
+    <string comment="@action">E&amp;xit</string>
    </property>
   </action>
   <action name="actionCollapseAll">
    <property name="text">
-    <string>&amp;Collapse All</string>
+    <string comment="@action">&amp;Collapse All</string>
    </property>
   </action>
   <action name="actionExpandAll">
    <property name="text">
-    <string>&amp;Expand All</string>
+    <string comment="@action">&amp;Expand All</string>
    </property>
   </action>
   <action name="actionReload">
    <property name="text">
-    <string>Reload</string>
+    <string comment="@action:intoolbar Verb, reload tests">Reload</string>
    </property>
   </action>
  </widget>

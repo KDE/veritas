@@ -116,8 +116,10 @@ TestRunner::TestRunner(ITestFramework* framework, ITestTreeBuilder* builder,
     tvd.runnerToolCounter++;
 
     QStringList resultHeaders;
-    resultHeaders << i18n("Test") << i18n("Message")
-                  << i18n("File") << i18n("Line");
+    resultHeaders << i18nc("@title:column Noun, the name of a test", "Test")
+                  << i18nc("@title:column", "Message")
+                  << i18nc("@title:column", "File")
+                  << i18nc("@title:column The number of a line in a file", "Line");
     d->resultsModel = new ResultsModel(resultHeaders, this);
     d->window = new RunnerWindow(d->resultsModel, projectFilter);
 

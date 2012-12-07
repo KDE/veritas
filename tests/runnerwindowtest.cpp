@@ -48,8 +48,10 @@ void RunnerWindowTest::init()
     model = createRunnerModelStub(false);
     model->fill2();
     QStringList resultHeaders;
-    resultHeaders << i18n("Test") << i18n("Message")
-                  << i18n("File") << i18n("Line");
+    resultHeaders << i18nc("@title:column Noun, the name of a test", "Test")
+                  << i18nc("@title:column", "Message")
+                  << i18nc("@title:column", "File")
+                  << i18nc("@title:column The number of a line in a file", "Line");
     m_resultsModel = new ResultsModel(resultHeaders);
     window = new RunnerWindow(m_resultsModel);
     window->setModel(model);
