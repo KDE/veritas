@@ -73,7 +73,7 @@ public:
     /*! show the runner widget, so it can be inspected manually during test execution */
     void setShowWidget(bool show = true);
 
-private slots:
+private Q_SLOTS:
     void triggerRunAction();
 
 private:
